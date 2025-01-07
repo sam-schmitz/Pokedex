@@ -23,9 +23,12 @@ function Homepage({Pokedex}) {
 		<>
 		<div className="homepage">
 			<h1>Pokedex</h1>
+            <h4>Find a Pokemon:</h4>
+
+            <h4>Pokemon of the Day:</h4>
 			{pokemon ? (
                 <p>
-                    <strong>Name:</strong> {pokemon.name}
+                    {pokemon.name}
                 </p>
             ) : (
                 <p>Loading...</p>   //displayed while data is being fetched
