@@ -2,6 +2,7 @@ import './App.css';
 import React, {useState, useEffect } from 'react';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Homepage from './homepage.js'
+import PokemonPage from './pokemonPage.js'
 
 const Pokedex = require("pokeapi-js-wrapper");
 
@@ -17,7 +18,9 @@ function App() {
                     <Homepage 
                     Pokedex={P}
                 />} />
-                <Route path='/pokemon' element={<p>Pokemon</p>} />
+                <Route path='/Pokedex/pokemon' element={
+                    <PokemonPage />
+                } />
             </Routes>
         </Router>
       </div></>
