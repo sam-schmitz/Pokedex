@@ -12,7 +12,7 @@ function App() {
       <div classname="App">
         <Router>
             <Routes>
-                <Route path='/' element={<p>Pokedex</p>} />
+                <Route path='/Pokedex' element={<p>Pokedex</p>} />
                 <Route path='/pokemon' element={<p>Pokemon</p>} />
             </Routes>
         </Router>
