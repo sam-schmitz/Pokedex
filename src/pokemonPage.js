@@ -13,6 +13,7 @@ function PokemonPage({Pokedex}) {
             try {
                 const data = await Pokedex.getPokemonByName(id);
                 setPokemon(data);   //update state with the fetched data
+                console.log(data.types[0].type.name);
             } catch (error) {
                 console.error("Error fetching Pokemon Data:", error);
             }
@@ -23,10 +24,12 @@ function PokemonPage({Pokedex}) {
 
 	return (
 		<>
+        <h1>{id}</h1>
 		<div className="PokemonPage">
 			{pokemon ? (
                 <p>
-                    {pokemon.name}
+                    <strong>Pokedex Number:</strong> {pokemon.id} <br />
+                    <strong>Type(s):</strong> {pokemon.types[0].type.name}, {pokemon.types[1].type.name}
                 </p>
             ) : (
                 <p>Loading...</p>   //displayed while data is being fetched
