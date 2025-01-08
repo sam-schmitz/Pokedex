@@ -2,6 +2,7 @@
 //By: Sam Schmitz
 
 import React, {useState, useEffect} from 'react';
+import {Link} from 'react-router-dom';
 
 function Homepage({Pokedex}) {
 	const [pokemon, setPokemon] = useState(null);   //state to store Pokemon data
@@ -26,13 +27,9 @@ function Homepage({Pokedex}) {
             <h4>Find a Pokemon:</h4>
 
             <h4>Pokemon of the Day:</h4>
-			{pokemon ? (
-                <p>
-                    {pokemon.name}
-                </p>
-            ) : (
-                <p>Loading...</p>   //displayed while data is being fetched
-            )}
+			<Link to={`/Pokedex/pokemon/charizard`} className="DailyPokemon">
+                <p>Charizard</p>
+            </Link>
 		</div>
 		</>
 	);
