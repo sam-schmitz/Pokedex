@@ -25,6 +25,7 @@ function Homepage({Pokedex}) {
 		<div className="homepage">
 			<h1>Pokedex</h1>
             <h4>Find a Pokemon:</h4>
+            <SearchWidget />
 
             <h4>Pokemon of the Day:</h4>
 			<Link to={`/Pokedex/pokemon/charizard`} className="DailyPokemon">
@@ -33,6 +34,29 @@ function Homepage({Pokedex}) {
 		</div>
 		</>
 	);
+}
+
+function SearchWidget() {
+    const [filterText, setFilterText] = useState('');
+
+    return (
+        <div className="seachwidget">
+        <SearchBar
+            filterText={filterText}
+            onFilterTextChange={setFilterText} />
+        </div>
+    );
+}
+
+function SearchBar({filterText, onFilterTextChange}) {
+    return (
+        <form className="searchbar">
+            <input
+                type="text"
+                value={filterText} placeholders="Search..."
+                onChange={(e) => onFilterTextChange(e.target.value)} />
+        </form>
+    );
 }
 
 export default Homepage;
