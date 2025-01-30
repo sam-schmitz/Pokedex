@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "cra-template": "1.2.0",
+    "fuse.js": "^7.0.0",
     "pokeapi-js-wrapper": "^1.2.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

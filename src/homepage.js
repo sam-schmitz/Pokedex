@@ -1,8 +1,9 @@
 //homepage.js
 //By: Sam Schmitz
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
+import Fuse from "fuse.js";
 
 function Homepage({Pokedex}) {
 	const [pokemon, setPokemon] = useState(null);   //state to store Pokemon data
@@ -51,10 +52,43 @@ function SearchWidget() {
 function SearchBar({query, setQuery}) {
     const pages = [
         {name: "Home", path: "/Pokedex"},
-        {name: "charizard", path: "/Pokedex/pokemon/charizard"}
+        {name: "charizard", path: "/Pokedex/pokemon/charizard"},
+        {name: "pikachu", path: "/Pokedex/pokemon/pikachu"}
     ]
 
+    const fuse = new Fuse(pages, {keys:["name"], threshold: 0.3});
+    const [suggestions, setSuggestions] = useState([]);
+    const [selectedIndex, setSelectedIndex] = useState(-1);
     const navigate = useNavigate();
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        if (query) {
+            setSuggestions(fuse.search(query).map((result) => result.item));
+        } else {
+            setSuggestions([]);
+        }
+        setSelectedIndex(-1);
+    }, [query]);
+
+    const handleSelect = (path) => {
+        navigate(path);
+        setQuery("")
+        setSuggestions([]);
+    }
+
+    const handleKeyDown = (e) => {
+        if (e.key === "ArrowDown") {
+            setSelectedIndex((prev) => (prev < suggestions.length - 1 ? prev + 1 :prev));
+        } else if (e.key === "ArrowUp") {
+            setSelectedIndex((prev) => (prev > 0 ? prev - 1 : 0));
+        } else if (e.key === "Enter" && selectedIndex >= 0) {
+            handleSelect(suggestions[selectedIndex].path);
+        } else if (e.key === "Escape") {
+            setSuggestions([]);
+        }
+    };
+    /*
     const handleSearch = (e) => {
         e.preventDefault();
         const match = pages.find((page) =>
@@ -64,7 +98,7 @@ function SearchBar({query, setQuery}) {
             navigate(match.path);
             setQuery("");
         }
-    };
+    };  
     
     return (
         <form className="searchbar"
@@ -81,6 +115,47 @@ function SearchBar({query, setQuery}) {
             </datalist>
             <button type="submit">Go</button>
         </form>
+    ); */
+    return (
+        <div className="searchbar-container" style={{ position: "relative"}}>
+            <input 
+                ref={inputRef}
+                type="text"
+                value={query}
+                placeholder="Search..."
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+                style={{width: "200px", padding: "8px" }}
+            />
+            {suggestions.length > 0 && (
+                <ul className="dropdown" style={{
+                    position: "absolute",
+                    top: "100%",
+                    left: "0",
+                    width: "100%",
+                    background: "white",
+                    border: "1px solid #ccc",
+                    listStyle: "none",
+                    padding: "0",
+                    margin: "0",
+                    zIndex: "1000"
+                }}>
+                    {suggestions.map((page, index) => (
+                        <li
+                            key={page.path}
+                            onClick={() => handleSelect(page.path)}
+                            style={{
+                                padding: "8px",
+                                cursor: "pointer",
+                                background: index === selectedIndex ? "#ddd" : "white"
+                            }}
+                        >
+                            {page.name}
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </div>
     );
 }
 
