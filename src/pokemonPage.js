@@ -1,4 +1,4 @@
-// pokemon.js
+// pokemonPage.js
 // By: Sam Schmitz
 
 import React, {useState, useEffect} from 'react';

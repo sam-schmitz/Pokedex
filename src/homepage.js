@@ -50,10 +50,13 @@ function SearchWidget() {
 }
 
 function SearchBar({query, setQuery}) {
+    const pmon = ["Charizard", "Venusaur", "Blastoise", "Pikachu"];
     const pages = [
         {name: "Home", path: "/Pokedex"},
-        {name: "charizard", path: "/Pokedex/pokemon/charizard"},
-        {name: "pikachu", path: "/Pokedex/pokemon/pikachu"}
+        ...pmon.map((name) => ({
+            name,
+            path: `\pokemon/${name.toLowerCase()}`,
+        }))
     ]
 
     const fuse = new Fuse(pages, {keys:["name"], threshold: 0.3});
