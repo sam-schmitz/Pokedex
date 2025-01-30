@@ -26,7 +26,8 @@ function Homepage({Pokedex}) {
 		<div className="homepage">
 			<h1>Pokedex</h1>
             <h4>Find a Pokemon:</h4>
-            <SearchWidget />
+            <SearchWidget 
+                Pokedex={Pokedex}/>
 
             <h4>Pokemon of the Day:</h4>
 			<Link to={`/Pokedex/pokemon/charizard`} className="DailyPokemon">
@@ -37,33 +38,52 @@ function Homepage({Pokedex}) {
 	);
 }
 
-function SearchWidget() {
+function SearchWidget({Pokedex}) {
     const [filterText, setFilterText] = useState('');
+    
 
     return (
         <div className="seachwidget">
-        <SearchBar
-            query={filterText}
-            setQuery={setFilterText} />
+        <SearchBar Pokedex={Pokedex}/>
         </div>
     );
 }
 
-function SearchBar({query, setQuery}) {
-    const pmon = ["Charizard", "Venusaur", "Blastoise", "Pikachu"];
-    const pages = [
-        {name: "Home", path: "/Pokedex"},
-        ...pmon.map((name) => ({
-            name,
-            path: `\pokemon/${name.toLowerCase()}`,
-        }))
-    ]
+function SearchBar({Pokedex}) {
+    const [query, setQuery] = useState('');
+    const [pokemonList, setPokemonList] = useState([]);
+    const [pages, setPages] = useState([{name: "Home", path: "/Pokedex"}]);
 
     const fuse = new Fuse(pages, {keys:["name"], threshold: 0.3});
     const [suggestions, setSuggestions] = useState([]);
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const navigate = useNavigate();
     const inputRef = useRef(null);
+
+    useEffect(() => {
+        const fetchPokemonList = async () => {
+            try {
+                const data = await Pokedex.getPokemonsList();
+                setPokemonList(data.results);
+            } catch (error) {
+                console.error("Error fetching Pokemon List:", error);
+            }
+        }
+
+    fetchPokemonList();
+    }, [Pokedex]);
+
+    useEffect(() => {
+        if (pokemonList.length > 0) {
+            setPages([
+                {name: "Home", path: "/Pokedex"},
+                ...pokemonList.map((pokemon) => ({
+                    name: pokemon.name, 
+                    path: `\pokemon/${pokemon.name.toLowerCase()}`,
+                }))
+            ])
+        }
+    }, [pokemonList]);
 
     useEffect(() => {
         if (query) {
@@ -91,34 +111,7 @@ function SearchBar({query, setQuery}) {
             setSuggestions([]);
         }
     };
-    /*
-    const handleSearch = (e) => {
-        e.preventDefault();
-        const match = pages.find((page) =>
-            page.name.toLowerCase().includes(query.toLowerCase())
-        );
-        if (match) {
-            navigate(match.path);
-            setQuery("");
-        }
-    };  
-    
-    return (
-        <form className="searchbar"
-        onSubmit={handleSearch} >
-            <input
-                type="text"
-                value={query} placeholder="Search..."
-                onChange={(e) => setQuery(e.target.value)}
-                list="search-options" />
-            <datalist  id="search-options">
-                {pages.map((page) => (
-                    <option key={page.path} value={page.name} />
-                ))}
-            </datalist>
-            <button type="submit">Go</button>
-        </form>
-    ); */
+
     return (
         <div className="searchbar-container" style={{ position: "relative"}}>
             <input 
