@@ -72,12 +72,14 @@ function SearchBar({query, setQuery}) {
             <input
                 type="text"
                 value={query} placeholder="Search..."
-                onChange={(e) => setQuery(e.target.value)} />
+                onChange={(e) => setQuery(e.target.value)}
+                list="search-options" />
             <datalist  id="search-options">
                 {pages.map((page) => (
                     <option key={page.path} value={page.name} />
                 ))}
             </datalist>
+            <button type="submit">Go</button>
         </form>
     );
 }
