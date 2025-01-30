@@ -2,7 +2,7 @@
 //By: Sam Schmitz
 
 import React, {useState, useEffect} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 function Homepage({Pokedex}) {
 	const [pokemon, setPokemon] = useState(null);   //state to store Pokemon data
@@ -42,19 +42,42 @@ function SearchWidget() {
     return (
         <div className="seachwidget">
         <SearchBar
-            filterText={filterText}
-            onFilterTextChange={setFilterText} />
+            query={filterText}
+            setQuery={setFilterText} />
         </div>
     );
 }
 
-function SearchBar({filterText, onFilterTextChange}) {
+function SearchBar({query, setQuery}) {
+    const pages = [
+        {name: "Home", path: "/Pokedex"},
+        {name: "charizard", path: "/Pokedex/pokemon/charizard"}
+    ]
+
+    const navigate = useNavigate();
+    const handleSearch = (e) => {
+        e.preventDefault();
+        const match = pages.find((page) =>
+            page.name.toLowerCase().includes(query.toLowerCase())
+        );
+        if (match) {
+            navigate(match.path);
+            setQuery("");
+        }
+    };
+    
     return (
-        <form className="searchbar">
+        <form className="searchbar"
+        onSubmit={handleSearch} >
             <input
                 type="text"
-                value={filterText} placeholders="Search..."
-                onChange={(e) => onFilterTextChange(e.target.value)} />
+                value={query} placeholder="Search..."
+                onChange={(e) => setQuery(e.target.value)} />
+            <datalist  id="search-options">
+                {pages.map((page) => (
+                    <option key={page.path} value={page.name} />
+                ))}
+            </datalist>
         </form>
     );
 }
