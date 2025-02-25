@@ -29,7 +29,7 @@ function PokemonPage({Pokedex}) {
 			{pokemon ? (
                 <p>
                     <strong>Pokedex Number:</strong> {pokemon.id} <br />
-                    <strong>Type(s):</strong> {pokemon.types[0].type.name}, {pokemon.types[1].type.name}
+                        <strong>Type(s):</strong> {pokemon.types.map((t) => t.type.name).join(", ")}
                 </p>
             ) : (
                 <p>Loading...</p>   //displayed while data is being fetched
