@@ -13,7 +13,7 @@ function PokemonPage({Pokedex}) {
             try {
                 const data = await Pokedex.getPokemonByName(id);
                 setPokemon(data);   //update state with the fetched data
-                console.log(data.types[0].type.name);
+                //console.log(data.types[0].type.name);
             } catch (error) {
                 console.error("Error fetching Pokemon Data:", error);
             }

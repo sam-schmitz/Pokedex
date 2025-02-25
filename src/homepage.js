@@ -5,14 +5,15 @@ import React, {useState, useEffect, useRef} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import Fuse from "fuse.js";
 
-function Homepage({Pokedex}) {
+function Homepage({ Pokedex }) {
+    const randomPokemon = Math.floor(Math.random() * 1025) + 1;
 	const [pokemon, setPokemon] = useState(null);   //state to store Pokemon data
 
     useEffect(() => {
         const fetchPokemonData = async () => {
             try {
-                const data = await Pokedex.getPokemonByName("charizard");
-                setPokemon(data);   //update state with the fetched data
+                const data = await Pokedex.getPokemonByName(randomPokemon);
+                setPokemon(data.forms[0].name);   //update state with the fetched data
             } catch (error) {
                 console.error("Error fetching Pokemon Data:", error);
             }
@@ -29,10 +30,13 @@ function Homepage({Pokedex}) {
             <SearchWidget 
                 Pokedex={Pokedex}/>
 
-            <h4>Pokemon of the Day:</h4>
-			<Link to={`/Pokedex/pokemon/charizard`} className="DailyPokemon">
-                <p>Charizard</p>
-            </Link>
+            <h4>Random Pokemon:</h4>
+            {pokemon ? (
+			    <Link to={`/Pokedex/pokemon/${pokemon}`} className="DailyPokemon">
+                <p>{pokemon}</p>
+                </Link>
+            ) : (
+                <p>Loading...</p>)}
 		</div>
 		</>
 	);
