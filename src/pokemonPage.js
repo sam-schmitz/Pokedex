@@ -14,18 +14,18 @@ function PokemonPage({Pokedex}) {
             try {
                 const data = await Pokedex.getPokemonByName(id);
                 const speciesData = await Pokedex.getPokemonSpeciesByName(id);
+
+                //Get Pokemon Image URL
+                const imageUrl = data.sprites.other["official-artwork"].front_default || data.sprites.front_default;
+
+                //Process Evolution Details
                 const evolutionChainId = speciesData.evolution_chain.url.split("/").slice(-2, -1)[0];
                 const evolutionData = await Pokedex.getEvolutionChainById(evolutionChainId);
                 const evolutionString = extractEvolutionNames(evolutionData.chain);
-                console.log(evolutionString);
-                setPokemon(data);   //update state with the fetched data
+                //console.log(evolutionString);
 
-                //turn the chain in evolutionData to an array with the names of the evolutions
-                /*
-                const evoChain = [];
-                for i in evoData:
-
-                */
+                //update state with the fetched data
+                setPokemon({ ...data, imageUrl });
                 setEvolutions(evolutionString);
             } catch (error) {
                 console.error("Error fetching Pokemon Data:", error);
@@ -39,13 +39,16 @@ function PokemonPage({Pokedex}) {
 		<>
         <h1>{id}</h1>
 		<div className="PokemonPage">
-			{pokemon ? (
-                <p>
-                    <strong>Pokedex Number:</strong> {pokemon.id} <br />
-                        <strong>Type(s):</strong> {pokemon.types.map((t) => t.type.name).join(", ")}
-                </p>
-            ) : (
-                <p>Loading...</p>   //displayed while data is being fetched
+                {pokemon ? (
+                    <>
+                        <img src={pokemon.imageUrl} alt={pokemon.name} width="200" />
+                        <p>
+                            <strong>Pokedex Number:</strong> {pokemon.id} <br />
+                            <strong>Type(s):</strong> {pokemon.types.map((t) => t.type.name).join(", ")}
+                        </p>
+                    </>
+                ) : (
+                        <p>Loading...</p>   //displayed while data is being fetched
             )}
                 {evolutions ? (<p>
                     <strong>Evolution Chain:</strong><br />
