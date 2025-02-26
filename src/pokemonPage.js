@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 function PokemonPage({Pokedex}) {
 	const id = useParams().id;
     const [pokemon, setPokemon] = useState(null);   //state to store Pokemon data
-    const [evolutions, setEvolutions] = useState([]); //list of evolution chains
+    const [evolutions, setEvolutions] = useState(null); //list of evolution chains
 
 	useEffect(() => {
         const fetchPokemonData = async () => {
@@ -26,7 +26,7 @@ function PokemonPage({Pokedex}) {
                 for i in evoData:
 
                 */
-                setEvolutions(evolutionData);
+                setEvolutions(evolutionString);
             } catch (error) {
                 console.error("Error fetching Pokemon Data:", error);
             }
@@ -47,10 +47,12 @@ function PokemonPage({Pokedex}) {
             ) : (
                 <p>Loading...</p>   //displayed while data is being fetched
             )}
-                <p>
-                    <strong>Evolution Chain:</strong>{" "}
-                    {evolutions.length > 0 ? evolutions.join(", ") : "Loading..."}
-                </p>
+                {evolutions ? (<p>
+                    <strong>Evolution Chain:</strong><br />
+                    {evolutions.join(" => ")} </p>
+                ) : (<p>
+                    "Loading..."
+                </p>)}
 		</div>
 		</>
 	)
