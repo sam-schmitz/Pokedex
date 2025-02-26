@@ -8,12 +8,14 @@ function PokemonPage({Pokedex}) {
 	const id = useParams().id;
     const [pokemon, setPokemon] = useState(null);   //state to store Pokemon data
     const [evolutions, setEvolutions] = useState(null); //list of evolution chains
+    const [moves, setMoves] = useState([]);
 
 	useEffect(() => {
         const fetchPokemonData = async () => {
             try {
                 const data = await Pokedex.getPokemonByName(id);
                 const speciesData = await Pokedex.getPokemonSpeciesByName(id);
+                console.log(data);
 
                 //Get Pokemon Image URL
                 const imageUrl = data.sprites.other["official-artwork"].front_default || data.sprites.front_default;
@@ -24,9 +26,13 @@ function PokemonPage({Pokedex}) {
                 const evolutionString = extractEvolutionNames(evolutionData.chain);
                 //console.log(evolutionString);
 
+                //extract move names
+                const moveNames = data.moves.map((m) => m.move.name);
+
                 //update state with the fetched data
                 setPokemon({ ...data, imageUrl });
                 setEvolutions(evolutionString);
+                setMoves(moveNames);
             } catch (error) {
                 console.error("Error fetching Pokemon Data:", error);
             }
@@ -49,16 +55,47 @@ function PokemonPage({Pokedex}) {
                     </>
                 ) : (
                         <p>Loading...</p>   //displayed while data is being fetched
-            )}
+                )}
                 {evolutions ? (<p>
                     <strong>Evolution Chain:</strong><br />
                     {evolutions} </p>
                 ) : (<p>
                     "Loading..."
                 </p>)}
+                <strong>Moves:</strong>
+                {moves ? (    
+                    <ScrollableMovesTable moves={moves} />
+                ) : (
+                    <p>Loading moves...</p>
+                )}
 		</div>
 		</>
 	)
+}
+
+function ScrollableMovesTable({ moves }) {
+    return (
+        <>
+            <div style={{ maxHeight: "300px", overflowY: "auto", border: "1px solid #ccc", padding: "10px" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                    <thead>
+                        <tr style={{ borderBottom: "2px solid black" }}>
+                            <th style={{ textAlign: "left", padding: "8px" }}>Move Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {moves.length > 0 ? moves.map((move, index) => (
+                            <tr key={index} style={{ borderBottom: "1px solid #ddd" }}>
+                                <td style={{ padding: "8px" }}>{move}</td>
+                            </tr>
+                        )) : (
+                            <tr><td>Loading moves...</td></tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </>
+        )
 }
 
 function extractEvolutionNames(chain) {
