@@ -49,7 +49,7 @@ function PokemonPage({Pokedex}) {
             )}
                 {evolutions ? (<p>
                     <strong>Evolution Chain:</strong><br />
-                    {evolutions.join(" => ")} </p>
+                    {evolutions} </p>
                 ) : (<p>
                     "Loading..."
                 </p>)}
@@ -58,14 +58,15 @@ function PokemonPage({Pokedex}) {
 	)
 }
 
-function extractEvolutionNames(chain, names = []) {
-    names.push(chain.species.name);
+function extractEvolutionNames(chain) {
+    const names = [chain.species.name];
 
     if (chain.evolves_to.length > 0) {
-        extractEvolutionNames(chain.evolves_to[0], names);
+        const evolutions = chain.evolves_to.map(extractEvolutionNames);
+        names.push(`${evolutions.join(" / ")}`);
     }
 
-    return names
+    return names.join(" => ")
 }
 
 export default PokemonPage
