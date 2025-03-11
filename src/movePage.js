@@ -30,7 +30,9 @@ function MovePage({ Pokedex }) {
                         <p>
                             <strong>Power:</strong> {move.power} <br />
                             <strong>Accuracy:</strong> {move.accuracy} <br />
-                            <strong>Type:</strong> {move.type.name}
+                            <strong>Type:</strong> {move.type.name} <br />
+                            <strong>Effect:</strong> {move.effect_entries[0].short_effect} <br />
+                            <strong>Target:</strong> {move.target.name}
                         </p>
                     </>
                 ) : (
