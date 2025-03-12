@@ -2,7 +2,7 @@
 // By: Sam Schmitz
 
 import React, {useState, useEffect} from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 function PokemonPage({Pokedex}) {
 	const id = useParams().id;
@@ -93,7 +93,9 @@ function ScrollableMovesTable({ moves }) {
                     <tbody>
                         {moves.length > 0 ? moves.map((move, index) => (
                             <tr key={index} style={{ borderBottom: "1px solid #ddd" }}>
-                                <td style={{ padding: "8px" }}>{move}</td>
+                                <Link to={`/Pokedex/move/${move}`}>
+                                    <td style={{ padding: "8px" }}>{move}</td>
+                                </Link>
                             </tr>
                         )) : (
                             <tr><td>Loading moves...</td></tr>
