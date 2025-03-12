@@ -72,6 +72,7 @@ function PokemonPage({Pokedex}) {
                 ) : (
                     <p>Loading moves...</p>
                 )}
+                <GoHomeButton />
 		</div>
 		</>
 	)
@@ -125,6 +126,16 @@ function removeHyphen(name) {
     return name.split("-")
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
+}
+
+function GoHomeButton() {
+    return (
+        <>
+            <Link to={`/Pokedex/`}>
+                Home
+            </Link>
+        </>
+        )
 }
 
 export default PokemonPage

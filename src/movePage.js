@@ -2,7 +2,7 @@
 // By: Sam Schmitz
 
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 function MovePage({ Pokedex }) {
     const id = useParams().id;
@@ -38,6 +38,7 @@ function MovePage({ Pokedex }) {
                 ) : (
                     <p>Loading...</p>
                 )}
+                <GoHomeButton />
             </div>
         </>
         )
@@ -51,6 +52,16 @@ function removeHyphen(name) {
     return name.split("-")
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
+}
+
+function GoHomeButton() {
+    return (
+        <>
+            <Link to={`/Pokedex/`}>
+                Home
+            </Link>
+        </>
+    )
 }
 
 export default MovePage
