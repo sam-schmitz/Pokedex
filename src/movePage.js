@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { GoHomeButton } from "./widgets.js";
 
 function MovePage({ Pokedex }) {
     const id = useParams().id;
@@ -52,16 +53,6 @@ function removeHyphen(name) {
     return name.split("-")
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
-}
-
-function GoHomeButton() {
-    return (
-        <>
-            <Link to={`/Pokedex/`}>
-                Home
-            </Link>
-        </>
-    )
 }
 
 export default MovePage
