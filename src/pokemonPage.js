@@ -90,9 +90,11 @@ function ScrollableMovesTable({ moves }) {
                     <tbody>
                         {moves.length > 0 ? moves.map((move, index) => (
                             <tr key={index} style={{ borderBottom: "1px solid #ddd" }}>
-                                <Link to={`/Pokedex/move/${move}`}>
-                                    <td style={{ padding: "8px" }}>{move}</td>
-                                </Link>
+                                <td style={{ padding: "8px" }}>
+                                    <Link to={`/Pokedex/move/${move}`}>
+                                        {move}
+                                    </Link>
+                                </td>
                             </tr>
                         )) : (
                             <tr><td>Loading moves...</td></tr>
