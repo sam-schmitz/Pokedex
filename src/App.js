@@ -47,7 +47,7 @@ function PageTitleUpdater() {   //component to update tab title and favicon base
             document.title = `${capitalize(pokemonName)} - Pokedex`;
         } else if (location.pathname.startsWith("/Pokedex/move/")) {
             const moveName = location.pathname.split("/").pop();
-            document.title = `${capitalize(moveName)} - Pokedex`;
+            document.title = `${removeHyphen(moveName)} - Pokedex`;
         }
     }, [location]);
 
@@ -64,6 +64,12 @@ function updateFavicon(url) {   //helper function to update the favicon dynamica
 
 function capitalize(str) {  //Helper function used to capitalize pokemon and move names
     return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function removeHyphen(name) {
+    return name.split("-")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
 }
 
 export default App;

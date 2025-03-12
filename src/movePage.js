@@ -24,15 +24,15 @@ function MovePage({ Pokedex }) {
     return (
         <>
             <div className="Move Page" >
-                <h1>{id}</h1>
+                <h1>{removeHyphen(id)}</h1>
                 {move ? (
                     <>
                         <p>
                             <strong>Power:</strong> {move.power} <br />
                             <strong>Accuracy:</strong> {move.accuracy} <br />
-                            <strong>Type:</strong> {move.type.name} <br />
+                            <strong>Type:</strong> {capitalize(move.type.name)} <br />
                             <strong>Effect:</strong> {move.effect_entries[0].short_effect} <br />
-                            <strong>Target:</strong> {move.target.name}
+                            <strong>Target:</strong> {removeHyphen(move.target.name)}
                         </p>
                     </>
                 ) : (
@@ -41,6 +41,16 @@ function MovePage({ Pokedex }) {
             </div>
         </>
         )
+}
+
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function removeHyphen(name) {
+    return name.split("-")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
 }
 
 export default MovePage
