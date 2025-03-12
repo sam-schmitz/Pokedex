@@ -24,7 +24,7 @@ function PokemonPage({Pokedex}) {
                 const evolutionChainId = speciesData.evolution_chain.url.split("/").slice(-2, -1)[0];
                 const evolutionData = await Pokedex.getEvolutionChainById(evolutionChainId);
                 const evolutionString = extractEvolutionNames(evolutionData.chain);
-                //console.log(evolutionString);
+                console.log(evolutionString);
 
                 //extract move names
                 const moveNames = data.moves.map((m) => m.move.name);
@@ -43,7 +43,7 @@ function PokemonPage({Pokedex}) {
 
 	return (
 		<>
-        <h1>{id}</h1>
+        <h1>{capitalize(id)}</h1>
 		<div className="PokemonPage">
                 {pokemon ? (
                     <>
@@ -51,13 +51,10 @@ function PokemonPage({Pokedex}) {
                         <p>
                             <strong>Pokedex Number:</strong> {pokemon.id} <br />
                             <strong>Type(s):</strong> {pokemon.types.map((t) => t.type.name).join(", ")} <br />
-                            <strong>Stats: </strong><br />
-                            HP: {pokemon.stats[0].base_stat} <br />
-                            Attack: {pokemon.stats[1].base_stat} <br />
-                            Defense: {pokemon.stats[2].base_stat} <br />
-                            Special Attack: {pokemon.stats[3].base_stat} <br />
-                            Special Defense: {pokemon.stats[4].base_stat} <br />
-                            Speed: {pokemon.stats[5].base_stat}
+                            <strong>Base Stats: </strong><br />
+                            <strong>HP:</strong> {pokemon.stats[0].base_stat} <strong>Attack: </strong>{pokemon.stats[1].base_stat} <br />
+                            <strong>Defense:</strong> {pokemon.stats[2].base_stat} <strong>Special Attack: </strong>{pokemon.stats[3].base_stat} <br />
+                            <strong>Special Defense:</strong> {pokemon.stats[4].base_stat} <strong>Speed: </strong>{pokemon.stats[5].base_stat}
                         </p>
                     </>
                 ) : (
@@ -108,7 +105,7 @@ function ScrollableMovesTable({ moves }) {
 }
 
 function extractEvolutionNames(chain) {
-    const names = [chain.species.name];
+    const names = [capitalize(chain.species.name)];
 
     if (chain.evolves_to.length > 0) {
         const evolutions = chain.evolves_to.map(extractEvolutionNames);
@@ -116,6 +113,10 @@ function extractEvolutionNames(chain) {
     }
 
     return names.join(" => ")
+}
+
+function capitalize(str) { 
+    return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 export default PokemonPage
