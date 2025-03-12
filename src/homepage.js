@@ -33,7 +33,7 @@ function Homepage({ Pokedex }) {
             <h4>Random Pokemon:</h4>
             {pokemon ? (
 			    <Link to={`/Pokedex/pokemon/${pokemon}`} className="DailyPokemon">
-                <p>{pokemon}</p>
+                <p>{capitalize(pokemon)}</p>
                 </Link>
             ) : (
                 <p>Loading...</p>)}
@@ -82,7 +82,7 @@ function SearchBar({Pokedex}) {
             setPages([
                 {name: "Home", path: "/Pokedex"},
                 ...pokemonList.map((pokemon) => ({
-                    name: pokemon.name, 
+                    name: removeHyphen(pokemon.name), 
                     path: `\pokemon/${pokemon.name.toLowerCase()}`,
                 }))
             ])
@@ -157,6 +157,16 @@ function SearchBar({Pokedex}) {
             )}
         </div>
     );
+}
+
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function removeHyphen(name) {
+    return name.split("-")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
 }
 
 export default Homepage;
