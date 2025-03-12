@@ -50,7 +50,14 @@ function PokemonPage({Pokedex}) {
                         <img src={pokemon.imageUrl} alt={pokemon.name} width="200" />
                         <p>
                             <strong>Pokedex Number:</strong> {pokemon.id} <br />
-                            <strong>Type(s):</strong> {pokemon.types.map((t) => t.type.name).join(", ")}
+                            <strong>Type(s):</strong> {pokemon.types.map((t) => t.type.name).join(", ")} <br />
+                            <strong>Stats: </strong><br />
+                            HP: {pokemon.stats[0].base_stat} <br />
+                            Attack: {pokemon.stats[1].base_stat} <br />
+                            Defense: {pokemon.stats[2].base_stat} <br />
+                            Special Attack: {pokemon.stats[3].base_stat} <br />
+                            Special Defense: {pokemon.stats[4].base_stat} <br />
+                            Speed: {pokemon.stats[5].base_stat}
                         </p>
                     </>
                 ) : (
