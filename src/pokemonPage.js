@@ -1,14 +1,15 @@
 // pokemonPage.js
 // By: Sam Schmitz
 
+import { Pokedex } from 'pokeapi-js-wrapper';
 import React, {useState, useEffect} from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { GoHomeButton } from "./widgets.js";
+import { GoHomeButton, DisplayPokemon } from "./widgets.js";
 
 function PokemonPage({Pokedex}) {
 	const id = useParams().id;
     const [pokemon, setPokemon] = useState(null);   //state to store Pokemon data
-    const [evolutions, setEvolutions] = useState(null); //list of evolution chains
+    const [evolutions, setEvolutions] = useState([]); //list of evolution chains
     const [moves, setMoves] = useState([]);
 
 	useEffect(() => {
@@ -25,7 +26,7 @@ function PokemonPage({Pokedex}) {
                 const evolutionChainId = speciesData.evolution_chain.url.split("/").slice(-2, -1)[0];
                 const evolutionData = await Pokedex.getEvolutionChainById(evolutionChainId);
                 const evolutionString = extractEvolutionNames(evolutionData.chain);
-                console.log(evolutionString);
+                //console.log(evolutionString);
 
                 //extract move names
                 const moveNames = data.moves.map((m) => m.move.name);
@@ -61,12 +62,16 @@ function PokemonPage({Pokedex}) {
                 ) : (
                         <p>Loading...</p>   //displayed while data is being fetched
                 )}
-                {evolutions ? (<p>
-                    <strong>Evolution Chain:</strong><br />
-                    {evolutions} </p>
-                ) : (<p>
-                    "Loading..."
-                </p>)}
+                <strong>Evolution Chain: </strong>
+                <div className="evolution-container">
+                    {evolutions.length > 0 ? (
+                        evolutions.map((name) => (
+                            <DisplayPokemon name={name} Pokedex={Pokedex} />
+                            ))
+                    ) : (
+                            <p>Loading...</p>
+                        )}
+                </div>
                 <strong>Moves:</strong>
                 {moves ? (    
                     <ScrollableMovesTable moves={moves} />
@@ -108,15 +113,32 @@ function ScrollableMovesTable({ moves }) {
         )
 }
 
-function extractEvolutionNames(chain) {
+function extractEvolutionNames(chain, names = []) {
+    /* old code
     const names = [capitalize(chain.species.name)];
+    //console.log(names);
 
     if (chain.evolves_to.length > 0) {
         const evolutions = chain.evolves_to.map(extractEvolutionNames);
         names.push(`${evolutions.join(" / ")}`);
     }
+    console.log(names);
 
     return names.join(" => ")
+    
+    {evolutions ? (<p>
+                    <strong>Evolution Chain:</strong><br />
+                    {evolutions} </p>
+                ) : (<p>
+                    "Loading..."
+                </p>)}*/
+    names.push(capitalize(chain.species.name));
+
+    if (chain.evolves_to.length > 0) {
+        chain.evolves_to.forEach(evo => extractEvolutionNames(evo, names));
+    }
+
+    return names;
 }
 
 function capitalize(str) { 
