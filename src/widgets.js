@@ -39,10 +39,12 @@ export function DisplayPokemon({ name, Pokedex }) {
     return (
         <>
             {pokemon ? (
-                <Link to={`/Pokedex/pokemon/${pokemon.name}`} >                    
-                    <img src={pokemon.imageUrl} alt={pokemon.name} width="100" />
-                    <p>{capitalize(pokemon.name)}</p>
-                </Link>
+                <div className="card shadow-sm border-0 text-ceneter p-2">
+                    <Link to={`/Pokedex/pokemon/${pokemon.name}`} >                    
+                        <img src={pokemon.imageUrl} alt={pokemon.name} width="100" />
+                        <p>{capitalize(pokemon.name)}</p>
+                    </Link>
+                </div>
             ) : (
                     <p>Loading...</p>
                     )}

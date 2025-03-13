@@ -63,14 +63,18 @@ function PokemonPage({Pokedex}) {
                         <p>Loading...</p>   //displayed while data is being fetched
                 )}
                 <strong>Evolution Chain: </strong>
-                <div className="evolution-container">
-                    {evolutions.length > 0 ? (
-                        evolutions.map((name) => (
-                            <DisplayPokemon name={name} Pokedex={Pokedex} />
-                            ))
-                    ) : (
-                            <p>Loading...</p>
+                <div className="container mt-3">
+                    <div className="row row-cols-2 row-cols-md-4 g-3 justify-content-center">
+                        {evolutions.length > 0 ? (
+                            evolutions.map((name, index) => (
+                                <div className="col text-center" key={index} >
+                                    <DisplayPokemon name={name} Pokedex={Pokedex} />
+                                </div>
+                                ))
+                        ) : (
+                                <p>Loading...</p>
                         )}
+                    </div>
                 </div>
                 <strong>Moves:</strong>
                 {moves ? (    
