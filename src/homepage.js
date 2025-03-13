@@ -8,20 +8,6 @@ import { DisplayPokemon } from "./widgets.js";
 
 function Homepage({ Pokedex }) {
     const randomPokemon = Math.floor(Math.random() * 1025) + 1;
-	const [pokemon, setPokemon] = useState(null);   //state to store Pokemon data
-
-    useEffect(() => {
-        const fetchPokemonData = async () => {
-            try {
-                const data = await Pokedex.getPokemonByName(randomPokemon);
-                setPokemon(data.forms[0].name);   //update state with the fetched data
-            } catch (error) {
-                console.error("Error fetching Pokemon Data:", error);
-            }
-        };
-
-    fetchPokemonData();
-    }, []);
 
 	return (
 		<>
@@ -166,10 +152,6 @@ function SearchBar({Pokedex}) {
             )}
         </div>
     );
-}
-
-function capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 function removeHyphen(name) {
