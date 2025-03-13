@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Route, Routes, useLocation} from 'react-router-
 import Homepage from './homepage.js'
 import PokemonPage from './pokemonPage.js'
 import MovePage from './movePage.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Pokedex = require("pokeapi-js-wrapper");
 
