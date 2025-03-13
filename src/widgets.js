@@ -21,8 +21,13 @@ export function DisplayPokemon({ name, Pokedex }) {
         const fetchPokemonData = async () => {
             try {
                 const data = await Pokedex.getPokemonByName(name);
-                setPokemon(data);
+                //const speciesData = await Pokedex.getPokemonSpeciesByName(name);
                 console.log(data);
+
+                const imageUrl = data.sprites.other["official-artwork"].front_default || data.sprites.front_default;
+
+
+                setPokemon({ ...data, imageUrl });
             } catch (error) {
                 console.error("Error fetching Pokemon Data:", error);
             }
@@ -34,7 +39,8 @@ export function DisplayPokemon({ name, Pokedex }) {
     return (
         <>
             {pokemon ? (
-                <Link to={`/Pokedex/pokemon/${pokemon}`} >
+                <Link to={`/Pokedex/pokemon/${pokemon}`} >                    
+                    <img src={pokemon.imageUrl} alt={pokemon.name} width="100" />
                     <p>{capitalize(pokemon.name)}</p>
                 </Link>
             ) : (
