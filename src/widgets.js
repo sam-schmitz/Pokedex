@@ -13,7 +13,7 @@ export function GoHomeButton() {
     )
 }
 
-export function DisplayPokemon(name, Pokedex) {
+export function DisplayPokemon({ name, Pokedex }) {
     return (
         <>
             <p>{name}</p>

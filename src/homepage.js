@@ -4,6 +4,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import Fuse from "fuse.js";
+import { DisplayPokemon } from "./widgets.js";
 
 function Homepage({ Pokedex }) {
     const randomPokemon = Math.floor(Math.random() * 1025) + 1;
@@ -24,23 +25,31 @@ function Homepage({ Pokedex }) {
 
 	return (
 		<>
-		<div className="homepage">
-			<h1>Pokedex</h1>
-            <h4>Find a Pokemon:</h4>
-            <SearchWidget 
-                Pokedex={Pokedex}/>
+            <div className="homepage">
+                <h1>Pokedex</h1>
+                <h4>Find a Pokemon:</h4>
+                <SearchWidget
+                    Pokedex={Pokedex} />
 
-            <h4>Random Pokemon:</h4>
-            {pokemon ? (
+                <h4>Random Pokemon:</h4>
+                <DisplayPokemon
+                    name={randomPokemon}
+                    Pokedex={Pokedex}
+                />
+            </div>
+		</>
+	);
+}
+
+/* 
+ * Old implementation for random pokemon
+ {pokemon ? (
 			    <Link to={`/Pokedex/pokemon/${pokemon}`} className="DailyPokemon">
                 <p>{capitalize(pokemon)}</p>
                 </Link>
             ) : (
                 <p>Loading...</p>)}
-		</div>
-		</>
-	);
-}
+ */
 
 function SearchWidget({Pokedex}) {
     const [filterText, setFilterText] = useState('');
