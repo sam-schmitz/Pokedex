@@ -118,24 +118,6 @@ function ScrollableMovesTable({ moves }) {
 }
 
 function extractEvolutionNames(chain, names = []) {
-    /* old code
-    const names = [capitalize(chain.species.name)];
-    //console.log(names);
-
-    if (chain.evolves_to.length > 0) {
-        const evolutions = chain.evolves_to.map(extractEvolutionNames);
-        names.push(`${evolutions.join(" / ")}`);
-    }
-    console.log(names);
-
-    return names.join(" => ")
-    
-    {evolutions ? (<p>
-                    <strong>Evolution Chain:</strong><br />
-                    {evolutions} </p>
-                ) : (<p>
-                    "Loading..."
-                </p>)}*/
     names.push(capitalize(chain.species.name));
 
     if (chain.evolves_to.length > 0) {
