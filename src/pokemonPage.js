@@ -7,7 +7,7 @@ import { useParams, Link } from 'react-router-dom';
 import { GoHomeButton, DisplayPokemon } from "./widgets.js";
 
 function PokemonPage({Pokedex}) {
-	const id = useParams().id;
+    const { id } = useParams();
     const [pokemon, setPokemon] = useState(null);   //state to store Pokemon data
     const [evolutions, setEvolutions] = useState([]); //list of evolution chains
     const [moves, setMoves] = useState([]);
@@ -15,9 +15,13 @@ function PokemonPage({Pokedex}) {
 	useEffect(() => {
         const fetchPokemonData = async () => {
             try {
+                //reset state before fetching new data
+                setPokemon(null);
+                setEvolutions([]);
+                setMoves([]);
+
                 const data = await Pokedex.getPokemonByName(id);
                 const speciesData = await Pokedex.getPokemonSpeciesByName(id);
-                console.log(data);
 
                 //Get Pokemon Image URL
                 const imageUrl = data.sprites.other["official-artwork"].front_default || data.sprites.front_default;
@@ -41,7 +45,7 @@ function PokemonPage({Pokedex}) {
         };
 
     fetchPokemonData();
-    }, []);
+    }, [id, Pokedex]);
 
 	return (
 		<>
