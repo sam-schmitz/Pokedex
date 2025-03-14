@@ -33,7 +33,12 @@ function PokemonPage({Pokedex}) {
                 //console.log(evolutionString);
 
                 //extract move names
-                const moveNames = data.moves.map((m) => m.move.name);
+                console.log(data.moves);
+                //data.moves.map((m) => m.move.name)
+                //console.log(data.moves.map((m) => [m.move.name, m.version_group_details[0].level_learned_at]));
+                const moveNames = data.moves.map((m) => [m.move.name,
+                    m.version_group_details[0].level_learned_at,
+                    m.version_group_details[0].move_learn_method.name]);
 
                 //update state with the fetched data
                 setPokemon({ ...data, imageUrl });
@@ -114,6 +119,7 @@ function ScrollableMovesTable({ moves }) {
                     <thead>
                         <tr style={{ borderBottom: "2px solid black" }}>
                             <th style={{ textAlign: "left", padding: "8px" }}>Move Name</th>
+                            <th style={{ textAlign: "left", padding: "8px" }}>Learned By</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -121,8 +127,11 @@ function ScrollableMovesTable({ moves }) {
                             <tr key={index} style={{ borderBottom: "1px solid #ddd" }}>
                                 <td style={{ padding: "8px" }}>
                                     <Link to={`/Pokedex/move/${move}`}>
-                                        {removeHyphen(move)}
+                                        {removeHyphen(move[0])}
                                     </Link>
+                                </td>
+                                <td style={{ padding: "8px" }}>
+                                    {learnedBy(move)}
                                 </td>
                             </tr>
                         )) : (
@@ -133,6 +142,14 @@ function ScrollableMovesTable({ moves }) {
             </div>
         </>
         )
+}
+
+function learnedBy(move) {
+    if (move[2] === 'level-up') {
+        return move[1]
+    } else {
+        return move[2]
+    }
 }
 
 function extractEvolutionNames(chain, names = []) {
