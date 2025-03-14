@@ -127,7 +127,7 @@ function ScrollableMovesTable({ moves }) {
                         {moves.length > 0 ? moves.map((move, index) => (
                             <tr key={index} style={{ borderBottom: "1px solid #ddd" }}>
                                 <td style={{ padding: "8px" }}>
-                                    <Link to={`/Pokedex/move/${move}`}>
+                                    <Link to={`/Pokedex/move/${move[0]}`}>
                                         {removeHyphen(move[0])}
                                     </Link>
                                 </td>
