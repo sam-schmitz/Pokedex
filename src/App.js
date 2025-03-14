@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Route, Routes, useLocation} from 'react-router-
 import Homepage from './homepage.js'
 import PokemonPage from './pokemonPage.js'
 import MovePage from './movePage.js';
+import { capitalize, removeHyphen } from "./widgets.js";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Pokedex = require("pokeapi-js-wrapper");
@@ -62,15 +63,5 @@ function updateFavicon(url) {   //helper function to update the favicon dynamica
     }
 }
 
-
-function capitalize(str) {  //Helper function used to capitalize pokemon and move names
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-function removeHyphen(name) {
-    return name.split("-")
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
-}
 
 export default App;

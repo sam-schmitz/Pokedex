@@ -4,7 +4,7 @@
 import { Pokedex } from 'pokeapi-js-wrapper';
 import React, {useState, useEffect} from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { GoHomeButton, DisplayPokemon } from "./widgets.js";
+import { GoHomeButton, DisplayPokemon, capitalize, removeHyphen } from "./widgets.js";
 
 function PokemonPage({Pokedex}) {
     const { id } = useParams();
@@ -149,7 +149,7 @@ function learnedBy(move) {
     if (move.version_group_details[0].move_learn_method.name === 'level-up') {
         return move.version_group_details[0].level_learned_at
     } else {
-        return move.version_group_details[0].move_learn_method.name
+        return capitalize(move.version_group_details[0].move_learn_method.name)
     }
 }
 
@@ -179,16 +179,6 @@ function extractEvolutionNames(chain, names = []) {
     }
 
     return names;
-}
-
-function capitalize(str) { 
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-function removeHyphen(name) {
-    return name.split("-")
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
 }
 
 export default PokemonPage

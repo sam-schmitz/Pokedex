@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { GoHomeButton } from "./widgets.js";
+import { GoHomeButton, capitalize, removeHyphen } from "./widgets.js";
 
 function MovePage({ Pokedex }) {
     const id = useParams().id;
@@ -43,16 +43,6 @@ function MovePage({ Pokedex }) {
             </div>
         </>
         )
-}
-
-function capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-function removeHyphen(name) {
-    return name.split("-")
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
 }
 
 export default MovePage
