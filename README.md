@@ -18,4 +18,19 @@
     <p><b>Description: </b>A router for the app. Has endpoints for Homepage and Pokemon Page</p>
     <p><b>Location: </b>src/app.js</p>
   </li>
+  <li>
+    <h4>Display Pokemon</h4>
+    <p><b>Description: </b>A button that links to a pokemon's page while displaying their name and image</p>
+    <p><b>Location: </b>src/widgets.js</p>
+  </li>
+  <li>
+    <h4>Go Home Button</h4>
+    <p><b>Description: </b>A button that links back to the home page. Used within PokemonPage and MovePage. </p>
+    <p><b>Location: </b>src/widgets.js</p>
+  </li>
+  <li>
+    <h4>Scrollable Moves Table</h4>
+    <p><b>Description: </b>Displays the moves a pokemon can use with a custom widget. Is scrollable and each row contains a link to the cooresponding move page. </p>
+    <p><b>Location: </b>src/pokemonPage.js</p>
+  </li>
 </ul>
