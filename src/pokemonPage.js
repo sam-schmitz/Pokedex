@@ -50,36 +50,50 @@ function PokemonPage({Pokedex}) {
 	return (
 		<>
         <h1>{capitalize(id)}</h1>
-		<div className="PokemonPage">
-                {pokemon ? (
-                    <>
-                        <img src={pokemon.imageUrl} alt={pokemon.name} width="200" />
-                        <p>
-                            <strong>Pokedex Number:</strong> {pokemon.id} <br />
-                            <strong>Type(s):</strong> {pokemon.types.map((t) => capitalize(t.type.name)).join(", ")} <br />
-                            <strong>Base Stats: </strong><br />
-                            <strong>HP:</strong> {pokemon.stats[0].base_stat} <strong>Attack: </strong>{pokemon.stats[1].base_stat} <br />
-                            <strong>Defense:</strong> {pokemon.stats[2].base_stat} <strong>Special Attack: </strong>{pokemon.stats[3].base_stat} <br />
-                            <strong>Special Defense:</strong> {pokemon.stats[4].base_stat} <strong>Speed: </strong>{pokemon.stats[5].base_stat}
-                        </p>
-                    </>
-                ) : (
-                        <p>Loading...</p>   //displayed while data is being fetched
-                )}
-                <strong>Evolution Chain: </strong>
+            <div className="PokemonPage">
                 <div className="container mt-3">
-                    <div className="row row-cols-2 row-cols-md-4 g-3 justify-content-center">
-                        {evolutions.length > 0 ? (
-                            evolutions.map((name, index) => (
-                                <div className="col text-center" key={index} >
-                                    <DisplayPokemon name={name} Pokedex={Pokedex} />
-                                </div>
-                                ))
-                        ) : (
-                                <p>Loading...</p>
-                        )}
+                    <div className="row">
+                        <div className="col-sm-6 col-md-4 justify-content-center">
+                            {pokemon ? (
+                                <>
+                                    <img src={pokemon.imageUrl} alt={pokemon.name} width="200" />
+                                </>
+                            ) : (
+                                    <p>Loading Image...</p>
+                            )}
+                        </div>
+                        <div className="col-sm-6 col-md-4 justify-content-center">
+                            {pokemon ? (
+                                <>                                
+                                    <p>
+                                        <strong>Pokedex Number:</strong> {pokemon.id} <br />
+                                        <strong>Type(s):</strong> {pokemon.types.map((t) => capitalize(t.type.name)).join(", ")} <br />
+                                        <strong>Base Stats: </strong><br />
+                                        <strong>HP:</strong> {pokemon.stats[0].base_stat} <strong>Attack: </strong>{pokemon.stats[1].base_stat} <br />
+                                        <strong>Defense:</strong> {pokemon.stats[2].base_stat} <strong>Special Attack: </strong>{pokemon.stats[3].base_stat} <br />
+                                        <strong>Special Defense:</strong> {pokemon.stats[4].base_stat} <strong>Speed: </strong>{pokemon.stats[5].base_stat}
+                                    </p>
+                                </>
+                            ) : (
+                                <p>Loading...</p>   //displayed while data is being fetched
+                            )}
+                        </div>
+                        <div className="col-md-4">
+                            <strong>Evolution Chain: </strong>
+                            <div className="row row-cols-3 g-3 justify-content-center">
+                                {evolutions.length > 0 ? (
+                                    evolutions.map((name, index) => (
+                                        <div className="col text-center" key={index} >
+                                            <DisplayPokemon name={name} Pokedex={Pokedex} />
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p>Loading...</p>
+                                )}
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </div>                                                
                 <strong>Moves:</strong>
                 {moves ? (    
                     <ScrollableMovesTable moves={moves} />
