@@ -33,17 +33,18 @@ function PokemonPage({Pokedex}) {
                 //console.log(evolutionString);
 
                 //extract move names
-                console.log(data.moves);
+                //console.log(data.moves);
                 //data.moves.map((m) => m.move.name)
                 //console.log(data.moves.map((m) => [m.move.name, m.version_group_details[0].level_learned_at]));
-                const moveNames = data.moves.map((m) => [m.move.name,
-                    m.version_group_details[0].level_learned_at,
-                    m.version_group_details[0].move_learn_method.name]);
+                let moves = data.moves.map((m) => [m.move.name,
+                    learnedBy(m)]);
+                console.log(moves);
+                moves = sortMoves(moves); 
 
                 //update state with the fetched data
                 setPokemon({ ...data, imageUrl });
                 setEvolutions(evolutionString);
-                setMoves(moveNames);
+                setMoves(moves);
             } catch (error) {
                 console.error("Error fetching Pokemon Data:", error);
             }
@@ -131,7 +132,7 @@ function ScrollableMovesTable({ moves }) {
                                     </Link>
                                 </td>
                                 <td style={{ padding: "8px" }}>
-                                    {learnedBy(move)}
+                                    {move[1]}
                                 </td>
                             </tr>
                         )) : (
@@ -145,11 +146,29 @@ function ScrollableMovesTable({ moves }) {
 }
 
 function learnedBy(move) {
-    if (move[2] === 'level-up') {
-        return move[1]
+    if (move.version_group_details[0].move_learn_method.name === 'level-up') {
+        return move.version_group_details[0].level_learned_at
     } else {
-        return move[2]
+        return move.version_group_details[0].move_learn_method.name
     }
+}
+
+function sortMoves(moves) {
+    return moves.sort((a, b) => {
+        const methodA = a[1];
+        const methodB = b[1];
+
+        if (typeof methodA === "number" && typeof methodB === "number") {
+            return methodA - methodB;
+        }
+        if (typeof methodA === "number") {
+            return -1;
+        }
+        if (typeof methodB === "number") {
+            return 1
+        }
+        return String(methodA).localeCompare(String(methodB));
+    })
 }
 
 function extractEvolutionNames(chain, names = []) {
