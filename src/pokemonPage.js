@@ -11,6 +11,9 @@ function PokemonPage({Pokedex}) {
     const [pokemon, setPokemon] = useState(null);   //state to store Pokemon data
     const [evolutions, setEvolutions] = useState([]); //list of evolution chains
     const [moves, setMoves] = useState([]);
+    const [weakneses, setWeaknesses] = useState([]);
+    const [resistances, setResistances] = useState([]);
+    const [immunites, setImmunities] = useState([]);
 
 	useEffect(() => {
         const fetchPokemonData = async () => {
@@ -19,6 +22,9 @@ function PokemonPage({Pokedex}) {
                 setPokemon(null);
                 setEvolutions([]);
                 setMoves([]);
+                setWeaknesses([]);
+                setResistances([]);
+                setImmunities([]);
 
                 const data = await Pokedex.getPokemonByName(id);
                 const speciesData = await Pokedex.getPokemonSpeciesByName(id);
@@ -38,8 +44,11 @@ function PokemonPage({Pokedex}) {
                 //console.log(data.moves.map((m) => [m.move.name, m.version_group_details[0].level_learned_at]));
                 let moves = data.moves.map((m) => [m.move.name,
                     learnedBy(m)]);
-                console.log(moves);
-                moves = sortMoves(moves); 
+                //console.log(moves);
+                moves = sortMoves(moves);
+
+                const typeNames = data.types.map((t) => t.type.name);
+                fetchTypeAdvantages(typeNames);
 
                 //update state with the fetched data
                 setPokemon({ ...data, imageUrl });
@@ -52,6 +61,31 @@ function PokemonPage({Pokedex}) {
 
     fetchPokemonData();
     }, [id, Pokedex]);
+
+    const fetchTypeAdvantages = async (typeNames) => {
+        try {
+            let weakSet = new Set();
+            let resistSet = new Set();
+            let immuneSet = new Set();
+
+            for (const type of typeNames) {
+                const typeData = await Pokedex.getTypeByName(type);
+
+                typeData.damage_relations.double_damage_from.forEach(t => weakSet.add(t.name));
+                typeData.damage_relations.half_damage_from.forEach(t => resistSet.add(t.name));
+                typeData.damage_relations.no_damage_from.forEach(t => immuneSet.add(t.name));
+            }
+
+            //remove resistances from weaknesses (if both exist it's neutral damage)
+            weakSet = new Set([...weakSet].filter(t => !resistSet.has(t)));
+
+            setWeaknesses([...weakSet]);
+            setResistances([...resistSet]);
+            setImmunities([...immuneSet]);
+        } catch (error) {
+            console.error("Error fetching type data:", error);
+        }
+    };
 
 	return (
 		<>
@@ -74,6 +108,9 @@ function PokemonPage({Pokedex}) {
                                     <p>
                                         <strong>Pokedex Number:</strong> {pokemon.id} <br />
                                         <strong>Type(s):</strong> {pokemon.types.map((t) => capitalize(t.type.name)).join(", ")} <br />
+                                        <strong>Weaknesses:</strong> {weakneses.map((t) => capitalize(t)).join(", ")} <br />
+                                        <strong>Resistances:</strong> {resistances.map((t) => capitalize(t)).join(", ")} <br />
+                                        <strong>Immunities:</strong> {immunites.map((t) => capitalize(t)).join(", ")} <br />
                                         <strong>Base Stats: </strong><br />
                                         <strong>HP:</strong> {pokemon.stats[0].base_stat} <strong>Attack: </strong>{pokemon.stats[1].base_stat} <br />
                                         <strong>Defense:</strong> {pokemon.stats[2].base_stat} <strong>Special Attack: </strong>{pokemon.stats[3].base_stat} <br />
