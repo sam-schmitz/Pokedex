@@ -12,16 +12,23 @@ function Homepage({ Pokedex }) {
 	return (
 		<>
             <div className="homepage">
-                <h1>Pokedex</h1>
-                <h4>Find a Pokemon:</h4>
-                <SearchWidget
-                    Pokedex={Pokedex} />
-
-                <h4>Random Pokemon:</h4>
-                <DisplayPokemon
-                    name={randomPokemon}
-                    Pokedex={Pokedex}
-                />
+                <div className="container">
+                    <h1>Pokedex</h1>
+                    <div className="row">
+                        <div className="col-12 justify-content-center">
+                            <h4>Find a Pokemon:</h4>
+                            <SearchWidget
+                                Pokedex={Pokedex} />
+                        </div>
+                        <div className="col-12 justify-content-center">
+                            <h4>Random Pokemon:</h4>
+                            <DisplayPokemon
+                                name={randomPokemon}
+                                Pokedex={Pokedex}
+                            />      
+                        </div>
+                    </div>
+                </div>                
             </div>
 		</>
 	);
@@ -112,15 +119,23 @@ function SearchBar({Pokedex}) {
     };
 
     return (
-        <div className="searchbar-container" style={{ position: "relative"}}>
+        <div className="searchbar-container"
+            style={{
+                position: "relative",
+                width: "400px",
+                margin: "0 auto"
+        }}>
             <input 
-                ref={inputRef}
+                ref={inputRef}                
                 type="text"
                 value={query}
                 placeholder="Search..."
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
-                style={{width: "200px", padding: "8px" }}
+                style={{      
+                    width: "100%",
+                    padding: "8px",                    
+                }}                
             />
             {suggestions.length > 0 && (
                 <ul className="dropdown" style={{
