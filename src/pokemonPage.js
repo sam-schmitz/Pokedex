@@ -9,6 +9,7 @@ import { GoHomeButton, DisplayPokemon, capitalize, removeHyphen } from "./widget
 function PokemonPage({Pokedex}) {
     const { id } = useParams();
     const [pokemon, setPokemon] = useState(null);   //state to store Pokemon data
+    const [species, setSpecies] = useState(null);   //contains more pokemon data
     const [evolutions, setEvolutions] = useState([]); //list of evolution chains
     const [moves, setMoves] = useState([]);
     const [weakneses, setWeaknesses] = useState([]);
@@ -56,6 +57,7 @@ function PokemonPage({Pokedex}) {
 
                 //update state with the fetched data
                 setPokemon({ ...data, imageUrl });
+                setSpecies(speciesData);
                 setEvolutions(evolutionString);
                 setMoves(moves);
                 setLegendary(legendarity);
@@ -98,6 +100,9 @@ function PokemonPage({Pokedex}) {
             {legendary && (
                 <h4>{legendary}</h4>
             )}
+            {species && (
+                <h4>The {species.genera[7].genus}</h4>
+            ) }
             <div className="PokemonPage">
                 <div className="container mt-3">
                     <div className="row">
@@ -114,13 +119,15 @@ function PokemonPage({Pokedex}) {
                             {pokemon ? (
                                 <>                                
                                     <p>
-                                        <strong>Pokedex Number:</strong> {pokemon.id} <br />
+                                        <strong>Pokedex Number:</strong> {pokemon.id} <br />                                        
                                         <strong>Type(s):</strong> {pokemon.types.map((t) => capitalize(t.type.name)).join(", ")} <br />
                                         <strong>Weaknesses:</strong> {weakneses.map((t) => capitalize(t)).join(", ")} <br />
                                         <strong>Resistances:</strong> {resistances.map((t) => capitalize(t)).join(", ")} <br />
                                         {immunites.length > 0 && (
                                             <p><strong>Immunities:</strong> {immunites.map((t) => capitalize(t)).join(", ")} <br /></p>
                                         )}
+                                        <strong>Description:</strong> {removeArrow(species.flavor_text_entries[0].flavor_text)}<br />                                        
+                                        
                                         
                                         <strong>Base Stats: </strong><br />
                                         <strong>HP:</strong> {pokemon.stats[0].base_stat} <strong>Attack: </strong>{pokemon.stats[1].base_stat} <br />
@@ -237,6 +244,10 @@ function legend(speciesData) {
     } else {
         return null;
     }
+}
+
+function removeArrow(text) {
+    return text.replace(/\f/g, " ");
 }
 
 export default PokemonPage
