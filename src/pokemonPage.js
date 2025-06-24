@@ -14,6 +14,7 @@ function PokemonPage({Pokedex}) {
     const [weakneses, setWeaknesses] = useState([]);
     const [resistances, setResistances] = useState([]);
     const [immunites, setImmunities] = useState([]);
+    const [legendary, setLegendary] = useState(null);
 
 	useEffect(() => {
         const fetchPokemonData = async () => {
@@ -25,9 +26,11 @@ function PokemonPage({Pokedex}) {
                 setWeaknesses([]);
                 setResistances([]);
                 setImmunities([]);
+                setLegendary(null);
 
                 const data = await Pokedex.getPokemonByName(id);
                 const speciesData = await Pokedex.getPokemonSpeciesByName(id);
+                console.log(speciesData);
 
                 //Get Pokemon Image URL
                 const imageUrl = data.sprites.other["official-artwork"].front_default || data.sprites.front_default;
@@ -36,6 +39,7 @@ function PokemonPage({Pokedex}) {
                 const evolutionChainId = speciesData.evolution_chain.url.split("/").slice(-2, -1)[0];
                 const evolutionData = await Pokedex.getEvolutionChainById(evolutionChainId);
                 const evolutionString = extractEvolutionNames(evolutionData.chain);
+                const legendarity = legend(speciesData);
                 //console.log(evolutionString);
 
                 //extract move names
@@ -54,6 +58,7 @@ function PokemonPage({Pokedex}) {
                 setPokemon({ ...data, imageUrl });
                 setEvolutions(evolutionString);
                 setMoves(moves);
+                setLegendary(legendarity);
             } catch (error) {
                 console.error("Error fetching Pokemon Data:", error);
             }
@@ -90,6 +95,9 @@ function PokemonPage({Pokedex}) {
 	return (
 		<>
         <h1>{capitalize(id)}</h1>
+            {legendary && (
+                <h4>{legendary}</h4>
+            )}
             <div className="PokemonPage">
                 <div className="container mt-3">
                     <div className="row">
@@ -219,6 +227,16 @@ function extractEvolutionNames(chain, names = []) {
     }
 
     return names;
+}
+
+function legend(speciesData) {
+    if (speciesData.is_legendary === true) {
+        return "Legendary";
+    } else if (speciesData.is_mythical === true) {
+        return "Mythical";
+    } else {
+        return null;
+    }
 }
 
 export default PokemonPage
