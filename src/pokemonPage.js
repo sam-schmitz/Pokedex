@@ -94,7 +94,7 @@ function PokemonPage({Pokedex}) {
 
 	return (
 		<>
-        <h1>{capitalize(id)}</h1>
+        <h1>{removeHyphen(id)}</h1>
             {legendary && (
                 <h4>{legendary}</h4>
             )}
