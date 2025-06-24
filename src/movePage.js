@@ -12,7 +12,7 @@ function MovePage({ Pokedex }) {
     useEffect(() => {
         const fetchMove = async () => {
             try {
-                const data = await Pokedex.getMoveByName(id);
+                const data = await Pokedex.getMoveByName(id);                
                 setMove(data);
             } catch (error) {
                 console.error("Error fetching Move Data:", error);
@@ -32,6 +32,7 @@ function MovePage({ Pokedex }) {
                             <strong>Power:</strong> {move.power} <br />
                             <strong>Accuracy:</strong> {move.accuracy} <br />
                             <strong>Type:</strong> {capitalize(move.type.name)} <br />
+                            <strong>Class:</strong> {capitalize(move.damage_class.name) } <br />
                             <strong>Effect:</strong> {move.effect_entries[0].short_effect} <br />
                             <strong>Target:</strong> {removeHyphen(move.target.name)}
                         </p>
