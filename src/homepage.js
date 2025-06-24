@@ -69,7 +69,7 @@ function SearchBar({Pokedex}) {
     useEffect(() => {
         const fetchPokemonList = async () => {
             try {
-                const data = await Pokedex.getPokemonsList();
+                const data = await Pokedex.getPokemonSpeciesList();
                 setPokemonList(data.results);
             } catch (error) {
                 console.error("Error fetching Pokemon List:", error);
