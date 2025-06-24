@@ -110,7 +110,10 @@ function PokemonPage({Pokedex}) {
                                         <strong>Type(s):</strong> {pokemon.types.map((t) => capitalize(t.type.name)).join(", ")} <br />
                                         <strong>Weaknesses:</strong> {weakneses.map((t) => capitalize(t)).join(", ")} <br />
                                         <strong>Resistances:</strong> {resistances.map((t) => capitalize(t)).join(", ")} <br />
-                                        <strong>Immunities:</strong> {immunites.map((t) => capitalize(t)).join(", ")} <br />
+                                        {immunites.length > 0 && (
+                                            <p><strong>Immunities:</strong> {immunites.map((t) => capitalize(t)).join(", ")} <br /></p>
+                                        )}
+                                        
                                         <strong>Base Stats: </strong><br />
                                         <strong>HP:</strong> {pokemon.stats[0].base_stat} <strong>Attack: </strong>{pokemon.stats[1].base_stat} <br />
                                         <strong>Defense:</strong> {pokemon.stats[2].base_stat} <strong>Special Attack: </strong>{pokemon.stats[3].base_stat} <br />
