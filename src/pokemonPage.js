@@ -40,9 +40,7 @@ function PokemonPage({Pokedex}) {
                 const imageUrl = data.sprites.other["official-artwork"].front_default || data.sprites.front_default;
 
                 //Process Evolution Details
-                const evolutionChainId = speciesData.evolution_chain.url.split("/").slice(-2, -1)[0];
-                const evolutionData = await Pokedex.getEvolutionChainById(evolutionChainId);
-                const evolutionString = extractEvolutionNames(evolutionData.chain);
+                const evolutionString = await generateEvolutionString(speciesData, data.name);
 
                 //extract data from species
                 const legendarity = legend(speciesData);
@@ -78,6 +76,55 @@ function PokemonPage({Pokedex}) {
 
     fetchPokemonData();
     }, [id, Pokedex]);
+    async function generateEvolutionString(speciesData, currentFormName) {
+        function formSuffix(formName) {
+            const match = formName.match(/-(alola|galar|hisui|paldea)/i);
+            return match ? match[1].toLowerCase() : null;
+        }
+
+        function collectSpeciesNames(chain, names = []) {
+            names.push(chain.species.name);
+            for (const evo of chain.evolves_to) {
+                collectSpeciesNames(evo, names);
+            }
+            return names;
+        }
+
+        const suffix = formSuffix(currentFormName);
+
+        const evolutionChainId = speciesData.evolution_chain.url.split("/").slice(-2, -1)[0];
+        const evolutionData = await Pokedex.getEvolutionChainById(evolutionChainId);
+        const speciesNames = collectSpeciesNames(evolutionData.chain);
+
+        const result = [];
+
+        for (const speciesName of speciesNames) {
+            const species = await Pokedex.getPokemonSpeciesByName(speciesName);
+
+            const match = species.varieties.find((v) =>
+                suffix
+                    ? v.pokemon.name.toLowerCase().includes(suffix)
+                    : v.is_default
+            );
+
+            result.push(match?.pokemon.name || speciesName);
+        }
+
+        return result;
+    }
+
+    function normalizeToPokeAPIName(formName) {
+        return formName
+            .replace("-alola", "")
+            .replace("-galar", "")
+            .replace("-hisuian", "")
+            .replace(/^(.*)$/, (_, name) => {
+                if (formName.includes("-alola")) return `alolan-${name}`;
+                if (formName.includes("-galar")) return `galarian-${name}`;
+                if (formName.includes("-hisui")) return `hisuian-${name}`;
+                return name;
+            });
+    }
 
     const fetchTypeAdvantages = async (typeNames) => {
         try {
@@ -107,7 +154,7 @@ function PokemonPage({Pokedex}) {
     const handleClick = async (index) => {
         if (species.varieties[index].pokemon.abilities) {
             // variety already has data stored
-            setPokemon(species.varieties[index].pokemon);
+            setPokemon(species.varieties[index].pokemon);            
         } else {
             setPokemon(null);
             const id = species.varieties[index].pokemon.name;
@@ -115,7 +162,16 @@ function PokemonPage({Pokedex}) {
 
             const imageUrl = data.sprites.other["official-artwork"].front_default || data.sprites.front_default;
 
-            setPokemon({ ...data, imageUrl });
+            setPokemon({ ...data, imageUrl });   
+
+
+            // Update evolutions                        
+            const evolutionString = await generateEvolutionString(species, data.name);
+            const updatedEvolutionArray = [];
+            for (const evo of evolutionString) {
+                updatedEvolutionArray.push(normalizeToPokeAPIName(evo));
+            }            
+            setEvolutions(updatedEvolutionArray);
 
             // Update Species
             const updatedSpecies = { ...species };
@@ -123,6 +179,7 @@ function PokemonPage({Pokedex}) {
             updatedSpecies.varieties[index].pokemon = {...data, imageUrl};
             setSpecies(updatedSpecies);
         }
+
     }
 
 	return (
@@ -273,14 +330,27 @@ function sortMoves(moves) {
     })
 }
 
-function extractEvolutionNames(chain, names = []) {
-    names.push(capitalize(chain.species.name));
+function extractEvolutionNames(chain, targetFormName, path = []) {
 
-    if (chain.evolves_to.length > 0) {
-        chain.evolves_to.forEach(evo => extractEvolutionNames(evo, names));
+    console.log(path, targetFormName);
+    const name = chain.species.name;
+    path.push(name);
+
+    if (name === targetFormName) {
+        console.log(path, targetFormName);
+        return path;
     }
 
-    return names;
+    for (const next of chain.evolves_to) {
+        const subPath = extractEvolutionNames(next, targetFormName, [...path]);
+        console.log(subPath);
+        if (subPath.includes(targetFormName)) {
+            console.log(path, targetFormName);
+            return subPath;
+        }
+    }
+    console.log(path, targetFormName);
+    return path;
 }
 
 function legend(speciesData) {
