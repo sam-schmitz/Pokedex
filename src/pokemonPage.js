@@ -104,6 +104,24 @@ function PokemonPage({Pokedex}) {
         }
     };    
 
+    const handleClick = async (index) => {
+        if (species.varieties[index].pokemon.abilities) {
+            // variety already has data stored
+            setPokemon(species.varieties[index].pokemon);
+        } else {
+            setPokemon(null);
+            const id = species.varieties[index].pokemon.name;
+            const data = await Pokedex.getPokemonByName(id);
+            setPokemon(data);
+
+            // Update Species
+            const updatedSpecies = { ...species };
+            //updatedSpecies.varieties = [...species.varieties];
+            updatedSpecies.varieties[index].pokemon = data;
+            setSpecies(updatedSpecies);
+        }
+    }
+
 	return (
         <>
             { pokemon ? (
@@ -119,8 +137,13 @@ function PokemonPage({Pokedex}) {
             )}
             {(species?.varieties.length > 1) && (
                 <>
-                    {species.varieties.map((variety) => (
-                        <p>{variety.pokemon.name}</p>
+                    {species.varieties.map((variety, index) => (
+                        <button
+                            key={index }
+                            onClick={() => handleClick(index)}
+                        >
+                            {variety.pokemon.name}
+                        </button>
                     )) }
                 </>
             ) }
