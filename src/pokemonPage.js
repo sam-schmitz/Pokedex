@@ -102,7 +102,7 @@ function PokemonPage({Pokedex}) {
             {legendary && (
                 <h4>{legendary}</h4>
             )}
-            {species && (
+            {species?.genera?.[7] && (
                 <h4>The {species.genera[7].genus}</h4>
             ) }
             <div className="PokemonPage">
