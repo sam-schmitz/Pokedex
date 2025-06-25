@@ -17,6 +17,7 @@ function PokemonPage({Pokedex}) {
     const [immunites, setImmunities] = useState([]);
     const [legendary, setLegendary] = useState(null);
     const [flavorText, setFlavorText] = useState(null);
+    const [variety, setVariety] = useState(0);
 
 	useEffect(() => {
         const fetchPokemonData = async () => {
@@ -29,9 +30,11 @@ function PokemonPage({Pokedex}) {
                 setResistances([]);
                 setImmunities([]);
                 setLegendary(null);
+                setVariety(0);
 
                 const data = await Pokedex.getPokemonByName(id);
-                const speciesData = await Pokedex.getPokemonSpeciesByName(id);                
+                let speciesData = await Pokedex.getPokemonSpeciesByName(id); 
+                console.log(speciesData);
 
                 //Get Pokemon Image URL
                 const imageUrl = data.sprites.other["official-artwork"].front_default || data.sprites.front_default;
@@ -40,9 +43,15 @@ function PokemonPage({Pokedex}) {
                 const evolutionChainId = speciesData.evolution_chain.url.split("/").slice(-2, -1)[0];
                 const evolutionData = await Pokedex.getEvolutionChainById(evolutionChainId);
                 const evolutionString = extractEvolutionNames(evolutionData.chain);
+
+                //extract data from species
                 const legendarity = legend(speciesData);
                 const englishFlavorText = extractFlavorText(speciesData.flavor_text_entries);
                 //console.log(evolutionString);
+
+                // Update Species with the pokemon data
+                speciesData.varieties[0].pokemon = data;
+                console.log(speciesData.varieties);
 
                 //extract move names
                 //console.log(data.moves);
@@ -97,8 +106,12 @@ function PokemonPage({Pokedex}) {
     };
 
 	return (
-		<>
-        <h1>{removeHyphen(id)}</h1>
+        <>
+            { pokemon ? (
+                <h1>{removeHyphen(pokemon.name)}</h1>
+            ) : (
+                <h1>{ removeHyphen(id) }</h1>
+            )}        
             {legendary && (
                 <h4>{legendary}</h4>
             )}
@@ -164,7 +177,7 @@ function PokemonPage({Pokedex}) {
                     <p>Loading moves...</p>
                 )}
                 <GoHomeButton />
-		</div>
+		    </div>
 		</>
 	)
 }
