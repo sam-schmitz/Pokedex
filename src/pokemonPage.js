@@ -51,7 +51,6 @@ function PokemonPage({Pokedex}) {
 
                 // Update Species with the pokemon data
                 speciesData.varieties[0].pokemon = data;
-                console.log(speciesData.varieties);
 
                 //extract move names
                 //console.log(data.moves);
@@ -103,7 +102,7 @@ function PokemonPage({Pokedex}) {
         } catch (error) {
             console.error("Error fetching type data:", error);
         }
-    };
+    };    
 
 	return (
         <>
@@ -117,6 +116,13 @@ function PokemonPage({Pokedex}) {
             )}
             {species?.genera?.[7] && (
                 <h4>The {species.genera[7].genus}</h4>
+            )}
+            {(species?.varieties.length > 1) && (
+                <>
+                    {species.varieties.map((variety) => (
+                        <p>{variety.pokemon.name}</p>
+                    )) }
+                </>
             ) }
             <div className="PokemonPage">
                 <div className="container mt-3">
