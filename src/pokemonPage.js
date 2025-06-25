@@ -16,6 +16,7 @@ function PokemonPage({Pokedex}) {
     const [resistances, setResistances] = useState([]);
     const [immunites, setImmunities] = useState([]);
     const [legendary, setLegendary] = useState(null);
+    const [flavorText, setFlavorText] = useState(null);
 
 	useEffect(() => {
         const fetchPokemonData = async () => {
@@ -30,8 +31,7 @@ function PokemonPage({Pokedex}) {
                 setLegendary(null);
 
                 const data = await Pokedex.getPokemonByName(id);
-                const speciesData = await Pokedex.getPokemonSpeciesByName(id);
-                console.log(speciesData);
+                const speciesData = await Pokedex.getPokemonSpeciesByName(id);                
 
                 //Get Pokemon Image URL
                 const imageUrl = data.sprites.other["official-artwork"].front_default || data.sprites.front_default;
@@ -41,6 +41,7 @@ function PokemonPage({Pokedex}) {
                 const evolutionData = await Pokedex.getEvolutionChainById(evolutionChainId);
                 const evolutionString = extractEvolutionNames(evolutionData.chain);
                 const legendarity = legend(speciesData);
+                const englishFlavorText = extractFlavorText(speciesData.flavor_text_entries);
                 //console.log(evolutionString);
 
                 //extract move names
@@ -61,6 +62,7 @@ function PokemonPage({Pokedex}) {
                 setEvolutions(evolutionString);
                 setMoves(moves);
                 setLegendary(legendarity);
+                setFlavorText(englishFlavorText);
             } catch (error) {
                 console.error("Error fetching Pokemon Data:", error);
             }
@@ -124,9 +126,9 @@ function PokemonPage({Pokedex}) {
                                         <strong>Weaknesses:</strong> {weakneses.map((t) => capitalize(t)).join(", ")} <br />
                                         <strong>Resistances:</strong> {resistances.map((t) => capitalize(t)).join(", ")} <br />
                                         {immunites.length > 0 && (
-                                            <p><strong>Immunities:</strong> {immunites.map((t) => capitalize(t)).join(", ")} <br /></p>
+                                            <><strong>Immunities:</strong> {immunites.map((t) => capitalize(t)).join(", ")} <br /></>
                                         )}
-                                        <strong>Description:</strong> {removeArrow(species.flavor_text_entries[0].flavor_text)}<br />                                        
+                                        <strong>Description:</strong> {removeArrow(flavorText)}<br />                                        
                                         
                                         
                                         <strong>Base Stats: </strong><br />
@@ -244,6 +246,15 @@ function legend(speciesData) {
     } else {
         return null;
     }
+}
+
+function extractFlavorText(entries) {    
+    for (let entry of entries) {        
+        if (entry.language.name === 'en') {
+            return entry.flavor_text;
+        }
+    }
+    return null;
 }
 
 function removeArrow(text) {
