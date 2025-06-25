@@ -164,14 +164,13 @@ function PokemonPage({Pokedex}) {
 
             setPokemon({ ...data, imageUrl });   
 
-
             // Update evolutions                        
             const evolutionString = await generateEvolutionString(species, data.name);
             const updatedEvolutionArray = [];
             for (const evo of evolutionString) {
                 updatedEvolutionArray.push(normalizeToPokeAPIName(evo));
             }            
-            setEvolutions(updatedEvolutionArray);
+            setEvolutions(evolutionString);
 
             // Update Species
             const updatedSpecies = { ...species };
@@ -248,7 +247,7 @@ function PokemonPage({Pokedex}) {
                             <div className="row row-cols-3 g-3 justify-content-center">
                                 {evolutions.length > 0 ? (
                                     evolutions.map((name, index) => (
-                                        <div className="col text-center" key={index} >
+                                        <div className="col text-center" key={name} >
                                             <DisplayPokemon name={name} Pokedex={Pokedex} />
                                         </div>
                                     ))
@@ -328,29 +327,6 @@ function sortMoves(moves) {
         }
         return String(methodA).localeCompare(String(methodB));
     })
-}
-
-function extractEvolutionNames(chain, targetFormName, path = []) {
-
-    console.log(path, targetFormName);
-    const name = chain.species.name;
-    path.push(name);
-
-    if (name === targetFormName) {
-        console.log(path, targetFormName);
-        return path;
-    }
-
-    for (const next of chain.evolves_to) {
-        const subPath = extractEvolutionNames(next, targetFormName, [...path]);
-        console.log(subPath);
-        if (subPath.includes(targetFormName)) {
-            console.log(path, targetFormName);
-            return subPath;
-        }
-    }
-    console.log(path, targetFormName);
-    return path;
 }
 
 function legend(speciesData) {
