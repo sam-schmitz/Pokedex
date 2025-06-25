@@ -50,7 +50,7 @@ function PokemonPage({Pokedex}) {
                 //console.log(evolutionString);
 
                 // Update Species with the pokemon data
-                speciesData.varieties[0].pokemon = data;
+                speciesData.varieties[0].pokemon = {...data, imageUrl};
 
                 //extract move names
                 //console.log(data.moves);
@@ -112,12 +112,15 @@ function PokemonPage({Pokedex}) {
             setPokemon(null);
             const id = species.varieties[index].pokemon.name;
             const data = await Pokedex.getPokemonByName(id);
-            setPokemon(data);
+
+            const imageUrl = data.sprites.other["official-artwork"].front_default || data.sprites.front_default;
+
+            setPokemon({ ...data, imageUrl });
 
             // Update Species
             const updatedSpecies = { ...species };
             //updatedSpecies.varieties = [...species.varieties];
-            updatedSpecies.varieties[index].pokemon = data;
+            updatedSpecies.varieties[index].pokemon = {...data, imageUrl};
             setSpecies(updatedSpecies);
         }
     }
