@@ -33,7 +33,18 @@ function PokemonPage({Pokedex}) {
                 setVariety(0);
 
                 const data = await Pokedex.getPokemonByName(id);
-                let speciesData = await Pokedex.getPokemonSpeciesByName(id); 
+                let speciesData;                
+                try {
+                    speciesData = await Pokedex.getPokemonSpeciesByName(id);
+                } catch (error) {
+                    if (error?.response.status === 404) {                        
+                        const { base, suffix } = splitFormSuffix(id);
+                        speciesData = await Pokedex.getPokemonSpeciesByName(base);
+                    } else {
+                        console.error("Error fetching species: ", error);
+                    }
+                }
+                
                 console.log(speciesData);
 
                 //Get Pokemon Image URL
@@ -48,7 +59,10 @@ function PokemonPage({Pokedex}) {
                 //console.log(evolutionString);
 
                 // Update Species with the pokemon data
-                speciesData.varieties[0].pokemon = {...data, imageUrl};
+                const variety = speciesData.varieties.find(
+                    (v) => v.pokemon.name === id
+                );
+                variety.pokemon = {...data, imageUrl};
 
                 //extract move names
                 //console.log(data.moves);
@@ -350,6 +364,19 @@ function extractFlavorText(entries) {
 
 function removeArrow(text) {
     return text.replace(/\f/g, " ");
+}
+function splitFormSuffix(name) {
+    const match = name.match(/^(.*?)(-(alola|galar|hisui|paldea|mega|gigantamax))$/i);
+    if (match) {
+        return {
+            base: match[1],     // e.g. "vulpix"
+            suffix: match[2]    // e.g. "-alola"
+        };
+    }
+    return {
+        base: name,           // if no suffix
+        suffix: null
+    };
 }
 
 export default PokemonPage
