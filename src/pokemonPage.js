@@ -51,7 +51,7 @@ function PokemonPage({Pokedex}) {
                 const imageUrl = data.sprites.other["official-artwork"].front_default || data.sprites.front_default;
 
                 //Process Evolution Details
-                const evolutionString = await generateEvolutionString(speciesData, data.name);
+                const evolutionArray = await generateEvolutionString(speciesData, data.name);                
 
                 //extract data from species
                 const legendarity = legend(speciesData);
@@ -62,7 +62,7 @@ function PokemonPage({Pokedex}) {
                 const variety = speciesData.varieties.find(
                     (v) => v.pokemon.name === id
                 );
-                variety.pokemon = {...data, imageUrl};
+                variety.pokemon = {...data, imageUrl, evolutionArray};
 
                 //extract move names
                 //console.log(data.moves);
@@ -77,9 +77,9 @@ function PokemonPage({Pokedex}) {
                 fetchTypeAdvantages(typeNames);
 
                 //update state with the fetched data
-                setPokemon({ ...data, imageUrl });
+                setPokemon({ ...data, imageUrl, evolutionArray });
                 setSpecies(speciesData);
-                setEvolutions(evolutionString);
+                setEvolutions(evolutionArray);
                 setMoves(moves);
                 setLegendary(legendarity);
                 setFlavorText(englishFlavorText);
@@ -176,20 +176,16 @@ function PokemonPage({Pokedex}) {
 
             const imageUrl = data.sprites.other["official-artwork"].front_default || data.sprites.front_default;
 
-            setPokemon({ ...data, imageUrl });   
-
             // Update evolutions                        
-            const evolutionString = await generateEvolutionString(species, data.name);
-            const updatedEvolutionArray = [];
-            for (const evo of evolutionString) {
-                updatedEvolutionArray.push(normalizeToPokeAPIName(evo));
-            }            
-            setEvolutions(evolutionString);
+            const evolutionArray = await generateEvolutionString(species, data.name);
+            setEvolutions(evolutionArray);
+
+            setPokemon({ ...data, imageUrl, evolutionArray });               
 
             // Update Species
             const updatedSpecies = { ...species };
             //updatedSpecies.varieties = [...species.varieties];
-            updatedSpecies.varieties[index].pokemon = {...data, imageUrl};
+            updatedSpecies.varieties[index].pokemon = {...data, imageUrl, evolutionArray};
             setSpecies(updatedSpecies);
         }
 
@@ -259,8 +255,8 @@ function PokemonPage({Pokedex}) {
                         <div className="col-md-4">
                             <strong>Evolution Chain: </strong>
                             <div className="row row-cols-3 g-3 justify-content-center">
-                                {evolutions.length > 0 ? (
-                                    evolutions.map((name, index) => (
+                                {pokemon ? (
+                                    pokemon.evolutionArray.map((name, index) => (
                                         <div className="col text-center" key={name} >
                                             <DisplayPokemon name={name} Pokedex={Pokedex} />
                                         </div>
