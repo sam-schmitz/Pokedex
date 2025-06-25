@@ -112,6 +112,7 @@ function PokemonPage({Pokedex}) {
                             {pokemon ? (
                                 <>
                                     <img src={pokemon.imageUrl} alt={pokemon.name} width="200" />
+                                    <p><strong>Description:</strong> {removeArrow(flavorText)}</p>
                                 </>
                             ) : (
                                     <p>Loading Image...</p>
@@ -127,8 +128,7 @@ function PokemonPage({Pokedex}) {
                                         <strong>Resistances:</strong> {resistances.map((t) => capitalize(t)).join(", ")} <br />
                                         {immunites.length > 0 && (
                                             <><strong>Immunities:</strong> {immunites.map((t) => capitalize(t)).join(", ")} <br /></>
-                                        )}
-                                        <strong>Description:</strong> {removeArrow(flavorText)}<br />                                        
+                                        )}                                        
                                         
                                         
                                         <strong>Base Stats: </strong><br />
