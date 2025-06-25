@@ -9,8 +9,7 @@ import { GoHomeButton, DisplayPokemon, capitalize, removeHyphen } from "./widget
 function PokemonPage({Pokedex}) {
     const { id } = useParams();
     const [pokemon, setPokemon] = useState(null);   //state to store Pokemon data
-    const [species, setSpecies] = useState(null);   //contains more pokemon data
-    const [evolutions, setEvolutions] = useState([]); //list of evolution chains
+    const [species, setSpecies] = useState(null);   //contains more pokemon data    
     const [moves, setMoves] = useState([]);
     const [weakneses, setWeaknesses] = useState([]);
     const [resistances, setResistances] = useState([]);
@@ -23,8 +22,7 @@ function PokemonPage({Pokedex}) {
         const fetchPokemonData = async () => {
             try {
                 //reset state before fetching new data
-                setPokemon(null);
-                setEvolutions([]);
+                setPokemon(null);                
                 setMoves([]);
                 setWeaknesses([]);
                 setResistances([]);
@@ -58,11 +56,7 @@ function PokemonPage({Pokedex}) {
                 const englishFlavorText = extractFlavorText(speciesData.flavor_text_entries);
                 //console.log(evolutionString);
 
-                // Update Species with the pokemon data
-                const variety = speciesData.varieties.find(
-                    (v) => v.pokemon.name === id
-                );
-                variety.pokemon = {...data, imageUrl, evolutionArray};
+                
 
                 //extract move names
                 //console.log(data.moves);
@@ -73,13 +67,18 @@ function PokemonPage({Pokedex}) {
                 //console.log(moves);
                 moves = sortMoves(moves);
 
-                const typeNames = data.types.map((t) => t.type.name);
-                fetchTypeAdvantages(typeNames);
+                const typeNames = data.types.map((t) => t.type.name);                
+                const { weaknesses, resistances, immunities } = await fetchTypeAdvantages(typeNames);                
 
-                //update state with the fetched data
-                setPokemon({ ...data, imageUrl, evolutionArray });
-                setSpecies(speciesData);
-                setEvolutions(evolutionArray);
+                // Update Species with the pokemon data
+                const variety = speciesData.varieties.find(
+                    (v) => v.pokemon.name === id
+                );
+                variety.pokemon = { ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities };
+
+                //update state with the fetched data                
+                setPokemon({ ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities });
+                setSpecies(speciesData);                
                 setMoves(moves);
                 setLegendary(legendarity);
                 setFlavorText(englishFlavorText);
@@ -155,11 +154,18 @@ function PokemonPage({Pokedex}) {
             }
 
             //remove resistances from weaknesses (if both exist it's neutral damage)
-            weakSet = new Set([...weakSet].filter(t => !resistSet.has(t)));
+            weakSet = new Set([...weakSet].filter(t => !resistSet.has(t)));            
 
-            setWeaknesses([...weakSet]);
-            setResistances([...resistSet]);
-            setImmunities([...immuneSet]);
+            console.log({
+                weaknesses: [...weakSet],
+                resistances: [...resistSet],
+                immunities: [...immuneSet]
+            });
+            return {
+                weaknesses: [...weakSet],
+                resistances: [...resistSet],
+                immunities: [...immuneSet]
+            };
         } catch (error) {
             console.error("Error fetching type data:", error);
         }
@@ -177,15 +183,17 @@ function PokemonPage({Pokedex}) {
             const imageUrl = data.sprites.other["official-artwork"].front_default || data.sprites.front_default;
 
             // Update evolutions                        
-            const evolutionArray = await generateEvolutionString(species, data.name);
-            setEvolutions(evolutionArray);
+            const evolutionArray = await generateEvolutionString(species, data.name);   
 
-            setPokemon({ ...data, imageUrl, evolutionArray });               
+            const typeNames = data.types.map((t) => t.type.name);
+            const { weaknesses, resistances, immunities } = await fetchTypeAdvantages(typeNames);
+            
+            setPokemon({ ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities });               
 
             // Update Species
             const updatedSpecies = { ...species };
             //updatedSpecies.varieties = [...species.varieties];
-            updatedSpecies.varieties[index].pokemon = {...data, imageUrl, evolutionArray};
+            updatedSpecies.varieties[index].pokemon = { ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities };
             setSpecies(updatedSpecies);
         }
 
@@ -235,10 +243,10 @@ function PokemonPage({Pokedex}) {
                                     <p>
                                         <strong>Pokedex Number:</strong> {pokemon.id} <br />                                        
                                         <strong>Type(s):</strong> {pokemon.types.map((t) => capitalize(t.type.name)).join(", ")} <br />
-                                        <strong>Weaknesses:</strong> {weakneses.map((t) => capitalize(t)).join(", ")} <br />
-                                        <strong>Resistances:</strong> {resistances.map((t) => capitalize(t)).join(", ")} <br />
-                                        {immunites.length > 0 && (
-                                            <><strong>Immunities:</strong> {immunites.map((t) => capitalize(t)).join(", ")} <br /></>
+                                        <strong>Weaknesses:</strong> {pokemon.weaknesses.map((t) => capitalize(t)).join(", ")} <br />
+                                        <strong>Resistances:</strong> {pokemon.resistances.map((t) => capitalize(t)).join(", ")} <br />
+                                        {pokemon.immunities.length > 0 && (
+                                            <><strong>Immunities:</strong> {pokemon.immunities.map((t) => capitalize(t)).join(", ")} <br /></>
                                         )}                                        
                                         
                                         
