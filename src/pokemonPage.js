@@ -4,7 +4,7 @@
 import { Pokedex } from 'pokeapi-js-wrapper';
 import React, {useState, useEffect} from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { GoHomeButton, DisplayPokemon, capitalize, removeHyphen } from "./widgets.js";
+import { GoHomeButton, DisplayPokemon, capitalize, removeHyphen, normalizeToPokeAPIName } from "./widgets.js";
 
 function PokemonPage({Pokedex}) {
     const { id } = useParams();
@@ -126,19 +126,6 @@ function PokemonPage({Pokedex}) {
         return result;
     }
 
-    function normalizeToPokeAPIName(formName) {
-        return formName
-            .replace("-alola", "")
-            .replace("-galar", "")
-            .replace("-hisuian", "")
-            .replace(/^(.*)$/, (_, name) => {
-                if (formName.includes("-alola")) return `alolan-${name}`;
-                if (formName.includes("-galar")) return `galarian-${name}`;
-                if (formName.includes("-hisui")) return `hisuian-${name}`;
-                return name;
-            });
-    }
-
     const fetchTypeAdvantages = async (typeNames) => {
         try {
             let weakSet = new Set();
@@ -207,9 +194,9 @@ function PokemonPage({Pokedex}) {
 	return (
         <>
             { pokemon ? (
-                <h1>{removeHyphen(pokemon.name)}</h1>
+                <h1>{removeHyphen(normalizeToPokeAPIName(pokemon.name))}</h1>
             ) : (
-                <h1>{ removeHyphen(id) }</h1>
+                <h1>{removeHyphen(normalizeToPokeAPIName(id)) }</h1>
             )}        
             {legendary && (
                 <h4>{legendary}</h4>
@@ -224,7 +211,7 @@ function PokemonPage({Pokedex}) {
                             key={index }
                             onClick={() => handleClick(index)}
                         >
-                            {variety.pokemon.name}
+                            {removeHyphen(normalizeToPokeAPIName(variety.pokemon.name))}
                         </button>
                     )) }
                 </>

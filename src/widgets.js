@@ -42,7 +42,7 @@ export function DisplayPokemon({ name, Pokedex }) {
                 <div className="card shadow-sm border-0 text-ceneter p-2">
                     <Link to={`/Pokedex/pokemon/${pokemon.name}`} >                    
                         <img src={pokemon.imageUrl} alt={pokemon.name} width="100" />
-                        <p>{removeHyphen(pokemon.name)}</p>
+                        <p>{removeHyphen(normalizeToPokeAPIName(pokemon.name))}</p>
                     </Link>
                 </div>
             ) : (
@@ -61,4 +61,16 @@ export function removeHyphen(name) {
     return name.split("-")
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
+}
+export function normalizeToPokeAPIName(formName) {
+    return formName
+        .replace("-alola", "")
+        .replace("-galar", "")
+        .replace("-hisuian", "")
+        .replace(/^(.*)$/, (_, name) => {
+            if (formName.includes("-alola")) return `alolan-${name}`;
+            if (formName.includes("-galar")) return `galarian-${name}`;
+            if (formName.includes("-hisui")) return `hisuian-${name}`;
+            return name;
+        });
 }
