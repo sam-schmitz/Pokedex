@@ -206,14 +206,18 @@ function PokemonPage({Pokedex}) {
             )}
             {(species?.varieties.length > 1) && (
                 <>
-                    {species.varieties.map((variety, index) => (
-                        <button
-                            key={index }
-                            onClick={() => handleClick(index)}
-                        >
-                            {removeHyphen(normalizeToPokeAPIName(variety.pokemon.name))}
-                        </button>
-                    )) }
+                    <h5 className="mt-3">Forms: </h5>
+                    <div className="d-flex justify-content-center flex-wrap gap-2 mt-2">
+                        {species.varieties.map((variety, index) => (
+                            <button
+                                key={index }
+                                onClick={() => handleClick(index)}
+                                className="btn btn-outline-primary"
+                            >
+                                {removeHyphen(normalizeToPokeAPIName(variety.pokemon.name))}
+                            </button>
+                        ))}
+                    </div>
                 </>
             ) }
             <div className="PokemonPage">
