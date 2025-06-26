@@ -74,10 +74,10 @@ function PokemonPage({Pokedex}) {
                 const variety = speciesData.varieties.find(
                     (v) => v.pokemon.name === id
                 );
-                variety.pokemon = { ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities };
+                variety.pokemon = { ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, moves };
 
                 //update state with the fetched data                
-                setPokemon({ ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities });
+                setPokemon({ ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, moves });
                 setSpecies(speciesData);                
                 setMoves(moves);
                 setLegendary(legendarity);
@@ -187,13 +187,18 @@ function PokemonPage({Pokedex}) {
 
             const typeNames = data.types.map((t) => t.type.name);
             const { weaknesses, resistances, immunities } = await fetchTypeAdvantages(typeNames);
+
+            let moves = data.moves.map((m) => [m.move.name,
+            learnedBy(m)]);
+            //console.log(moves);
+            moves = sortMoves(moves);
             
-            setPokemon({ ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities });               
+            setPokemon({ ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, moves });               
 
             // Update Species
             const updatedSpecies = { ...species };
             //updatedSpecies.varieties = [...species.varieties];
-            updatedSpecies.varieties[index].pokemon = { ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities };
+            updatedSpecies.varieties[index].pokemon = { ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, moves };
             setSpecies(updatedSpecies);
         }
 
@@ -277,8 +282,8 @@ function PokemonPage({Pokedex}) {
                     </div>
                 </div>                                                
                 <strong>Moves:</strong>
-                {moves ? (    
-                    <ScrollableMovesTable moves={moves} />
+                {pokemon ? (    
+                    <ScrollableMovesTable moves={pokemon.moves} />
                 ) : (
                     <p>Loading moves...</p>
                 )}
