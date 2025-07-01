@@ -31,6 +31,8 @@ function PokemonPage({Pokedex}) {
                 setVariety(0);
 
                 const data = await Pokedex.getPokemonByName(id);
+                console.log(data);
+                
                 let speciesData;                
                 try {
                     speciesData = await Pokedex.getPokemonSpeciesByName(id);
@@ -42,7 +44,7 @@ function PokemonPage({Pokedex}) {
                         console.error("Error fetching species: ", error);
                     }
                 }
-                
+
                 console.log(speciesData);
 
                 //Get Pokemon Image URL
@@ -70,14 +72,22 @@ function PokemonPage({Pokedex}) {
                 const typeNames = data.types.map((t) => t.type.name);                
                 const { weaknesses, resistances, immunities } = await fetchTypeAdvantages(typeNames);                
 
+                let encounters;
+                await Pokedex.resource([
+                    data.location_area_encounters
+                ]).then(function (response) {
+                    encounters = response
+                })                                
+
+
                 // Update Species with the pokemon data
                 const variety = speciesData.varieties.find(
                     (v) => v.pokemon.name === id
                 );
-                variety.pokemon = { ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, moves };
+                variety.pokemon = { ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, moves, encounters };
 
                 //update state with the fetched data                
-                setPokemon({ ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, moves });
+                setPokemon({ ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, moves, encounters });
                 setSpecies(speciesData);                
                 setMoves(moves);
                 setLegendary(legendarity);
@@ -179,13 +189,20 @@ function PokemonPage({Pokedex}) {
             learnedBy(m)]);
             //console.log(moves);
             moves = sortMoves(moves);
+
+            let encounters;
+            await Pokedex.resource([
+                data.location_area_encounters
+            ]).then(function (response) {
+                encounters = response
+            })  
             
-            setPokemon({ ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, moves });               
+            setPokemon({ ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, moves, encounters });               
 
             // Update Species
             const updatedSpecies = { ...species };
             //updatedSpecies.varieties = [...species.varieties];
-            updatedSpecies.varieties[index].pokemon = { ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, moves };
+            updatedSpecies.varieties[index].pokemon = { ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, moves, encounters };
             setSpecies(updatedSpecies);
         }
 
