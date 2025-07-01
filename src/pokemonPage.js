@@ -350,27 +350,33 @@ function ScrollableMovesTable({ moves }) {
 function LocationTable({encounters }) {
     return (
         <>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Area Name</th>
-                        <th>Version(s)</th>
-                    </tr>                    
-                </thead>
-                <tbody>
-                    {encounters.length > 0 ? encounters[0].map((entry, index) => (
-                        <tr key={index} >
-                            <td>{removeHyphen(entry.location_area.name)}</td>
-                            <td>{entry.version_details.map((entry, index) => (
-                                removeHyphen(entry.version.name) + " "
-                            ))}</td>
-                        </tr>
-                    )) : (
-                        <tr><td>Loading encounters</td></tr>
+            <div style={{ maxHeight: "300px", overflowY: "auto", border: "1px solid #ccc", padding: "10px" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                    <thead>
+                        <tr style={{ borderBottom: "2px solid black" }}>
+                            <th style={{ textAlign: "left", padding: "8px" }}>Area Name</th>
+                            <th style={{ textAlign: "left", padding: "8px" }}>Version(s)</th>
+                        </tr>                    
+                    </thead>
+                    <tbody>
+                        {encounters.length > 0 ? encounters[0].map((entry, index) => (
+                            <tr key={index} style={{ borderBottom: "1px solid #ddd" }}>
+                                <td style={{ padding: "8px" }}>
+                                    {removeHyphen(entry.location_area.name)}
+                                </td>
+                                <td style={{ padding: "8px" }}>
+                                    {entry.version_details.map((entry, index) => (
+                                    removeHyphen(entry.version.name) + " "
+                                    ))}
+                                </td>
+                            </tr>
+                        )) : (
+                            <tr><td>Loading encounters</td></tr>
 
-                    ) }
-                </tbody>
-            </table>
+                        ) }
+                    </tbody>
+                </table>
+            </div>
         </>
     )
 }
