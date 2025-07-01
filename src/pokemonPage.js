@@ -288,13 +288,26 @@ function PokemonPage({Pokedex}) {
                             </div>
                         </div>
                     </div>
+                    <div className="row" >
+                        <div className="col-md-6" >
+                            <strong>Moves:</strong>
+                            {pokemon ? (
+                                <ScrollableMovesTable moves={pokemon.moves} />
+                            ) : (
+                                <p>Loading moves...</p>
+                            )}
+                        </div>
+                        <div className="col-md-6">
+                            <strong>Locations:</strong>
+                            {pokemon ? (
+                                <LocationTable encounters={pokemon.encounters } />
+                            ) : (
+                                <p>Loading Locations...</p>
+                            ) }
+                        </div>
+                    </div>
                 </div>                                                
-                <strong>Moves:</strong>
-                {pokemon ? (    
-                    <ScrollableMovesTable moves={pokemon.moves} />
-                ) : (
-                    <p>Loading moves...</p>
-                )}
+                
                 <GoHomeButton />
 		    </div>
 		</>
@@ -332,6 +345,13 @@ function ScrollableMovesTable({ moves }) {
             </div>
         </>
         )
+}
+function LocationTable({encounters }) {
+    return (
+        <>
+            <p>Locations</p>
+        </>
+    )
 }
 
 function learnedBy(move) {
