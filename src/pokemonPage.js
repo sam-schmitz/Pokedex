@@ -77,7 +77,8 @@ function PokemonPage({Pokedex}) {
                     data.location_area_encounters
                 ]).then(function (response) {
                     encounters = response
-                })                                
+                })                   
+                console.log(encounters[0]);
 
 
                 // Update Species with the pokemon data
@@ -349,7 +350,27 @@ function ScrollableMovesTable({ moves }) {
 function LocationTable({encounters }) {
     return (
         <>
-            <p>Locations</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Area Name</th>
+                        <th>Version(s)</th>
+                    </tr>                    
+                </thead>
+                <tbody>
+                    {encounters.length > 0 ? encounters[0].map((entry, index) => (
+                        <tr key={index} >
+                            <td>{removeHyphen(entry.location_area.name)}</td>
+                            <td>{entry.version_details.map((entry, index) => (
+                                removeHyphen(entry.version.name) + " "
+                            ))}</td>
+                        </tr>
+                    )) : (
+                        <tr><td>Loading encounters</td></tr>
+
+                    ) }
+                </tbody>
+            </table>
         </>
     )
 }
