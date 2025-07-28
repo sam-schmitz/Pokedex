@@ -17,6 +17,7 @@ function PokemonPage({Pokedex}) {
     const [legendary, setLegendary] = useState(null);
     const [flavorText, setFlavorText] = useState(null);
     const [variety, setVariety] = useState(0);
+    const [generation, setGeneration] = useState(9)
 
 	useEffect(() => {
         const fetchPokemonData = async () => {
@@ -58,16 +59,13 @@ function PokemonPage({Pokedex}) {
                 const englishFlavorText = extractFlavorText(speciesData.flavor_text_entries);
                 //console.log(evolutionString);
 
-                
+
 
                 //extract move names
                 //console.log(data.moves);
                 //data.moves.map((m) => m.move.name)
                 //console.log(data.moves.map((m) => [m.move.name, m.version_group_details[0].level_learned_at]));
-                let moves = data.moves.map((m) => [m.move.name,
-                    learnedBy(m)]);
-                //console.log(moves);
-                moves = sortMoves(moves);
+                let moves = sortGenerationMoves(data.moves)               
 
                 const typeNames = data.types.map((t) => t.type.name);                
                 const { weaknesses, resistances, immunities } = await fetchTypeAdvantages(typeNames);                
@@ -135,6 +133,31 @@ function PokemonPage({Pokedex}) {
         }
 
         return result;
+    }
+    function sortGenerationMoves(moves) {
+        //let moves = data.moves.map((m) => [m.move.name,
+        //learnedBy(m)]);
+        //console.log(moves);
+        //moves = sortMoves(moves);
+        let m = [];
+        for (let i = 0; i < moves.length; i++) {            
+            for (let j = 0; j < moves[i].version_group_details.length; j++) {
+                if (generation.includes(moves[i].version_group_details[j].version_group.name)) {
+                    let moveData = [moves[i].move.name];
+                    if (moves[i].version_group_details[j].move_learn_method.name !== "level-up") {
+                        moveData.push(capitalize(moves[i].version_group_details[j].move_learn_method.name));
+                    } else {
+                        moveData.push(moves[i].version_group_details[j].level_learned_at);
+                    }
+                    moveData.push(moves[i].version_group_details[j].version_group.name);
+
+                    m.push(moveData);
+
+                }             
+            }
+        }
+
+        //sort
     }
 
     const fetchTypeAdvantages = async (typeNames) => {
