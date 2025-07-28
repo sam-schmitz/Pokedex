@@ -65,13 +65,13 @@ function PokemonPage({Pokedex}) {
                 const typeNames = data.types.map((t) => t.type.name);                
                 const { weaknesses, resistances, immunities } = await fetchTypeAdvantages(typeNames);                
 
-                let encounters;
-                await Pokedex.resource([
+                let encounters = [];
+                /*await Pokedex.resource([
                     data.location_area_encounters
                 ]).then(function (response) {
                     encounters = response
                 })                   
-                console.log(encounters[0]);
+                console.log(encounters[0]);*/
 
 
                 // Update Species with the pokemon data
@@ -216,12 +216,13 @@ function PokemonPage({Pokedex}) {
 
             let moves = sortGenerationMoves(data.moves)               
 
-            let encounters;
+            /*let encounters;
             await Pokedex.resource([
                 data.location_area_encounters
             ]).then(function (response) {
                 encounters = response
-            })  
+            })*/
+            let encounters = []
             
             setPokemon({ ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, moves, encounters });               
 
@@ -322,15 +323,7 @@ function PokemonPage({Pokedex}) {
                             ) : (
                                 <p>Loading moves...</p>
                             )}
-                        </div>
-                        <div className="col-md-6">
-                            <strong>Locations:</strong>
-                            {pokemon ? (
-                                <LocationTable encounters={pokemon.encounters } />
-                            ) : (
-                                <p>Loading Locations...</p>
-                            ) }
-                        </div>
+                        </div>                     
                     </div>
                 </div>                                                
                 
