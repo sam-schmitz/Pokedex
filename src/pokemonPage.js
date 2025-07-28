@@ -17,7 +17,7 @@ function PokemonPage({Pokedex}) {
     const [legendary, setLegendary] = useState(null);
     const [flavorText, setFlavorText] = useState(null);
     const [variety, setVariety] = useState(0);
-    const [generation, setGeneration] = useState(9)
+    const [generation, setGeneration] = useState('scarlet-violet')
 
 	useEffect(() => {
         const fetchPokemonData = async () => {
@@ -156,8 +156,22 @@ function PokemonPage({Pokedex}) {
                 }             
             }
         }
+        
+        return m.sort((a, b) => {
+            const methodA = a[1];
+            const methodB = b[1];
 
-        //sort
+            if (typeof methodA === "number" && typeof methodB === "number") {
+                return methodA - methodB;
+            }
+            if (typeof methodA === "number") {
+                return -1;
+            }
+            if (typeof methodB === "number") {
+                return 1
+            }
+            return String(methodA).localeCompare(String(methodB));
+        })
     }
 
     const fetchTypeAdvantages = async (typeNames) => {
