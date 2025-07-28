@@ -6,6 +6,18 @@ import React, {useState, useEffect} from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { GoHomeButton, DisplayPokemon, capitalize, removeHyphen, normalizeToPokeAPIName } from "./widgets.js";
 
+
+const generations = {
+    1: 'red-blue-yellow',
+    2: 'gold-silver-crystal',
+    3: 'ruby-sapphire-emerald-firered-leafgreen',
+    4: 'diamond-pearl-platinum-heartgold-soulsilver',
+    5: 'black-white-black-2-white-2',
+    6: 'x-y-omega-ruby-alpha-sapphire',
+    7: 'sun-moon-ultra-sun-ultra-moon',
+    8: 'brilliant-diamond-and-shining-pearl',
+    9: 'scarlet-violet'
+};
 function PokemonPage({Pokedex}) {
     const { id } = useParams();
     const [pokemon, setPokemon] = useState(null);   //state to store Pokemon data
@@ -60,6 +72,7 @@ function PokemonPage({Pokedex}) {
                 //console.log(evolutionString);
 
                 //extract move names
+                console.log(data.moves);
                 let moves = sortGenerationMoves(data.moves)               
 
                 const typeNames = data.types.map((t) => t.type.name);                
