@@ -59,12 +59,7 @@ function PokemonPage({Pokedex}) {
                 const englishFlavorText = extractFlavorText(speciesData.flavor_text_entries);
                 //console.log(evolutionString);
 
-
-
                 //extract move names
-                //console.log(data.moves);
-                //data.moves.map((m) => m.move.name)
-                //console.log(data.moves.map((m) => [m.move.name, m.version_group_details[0].level_learned_at]));
                 let moves = sortGenerationMoves(data.moves)               
 
                 const typeNames = data.types.map((t) => t.type.name);                
@@ -134,11 +129,7 @@ function PokemonPage({Pokedex}) {
 
         return result;
     }
-    function sortGenerationMoves(moves) {
-        //let moves = data.moves.map((m) => [m.move.name,
-        //learnedBy(m)]);
-        //console.log(moves);
-        //moves = sortMoves(moves);
+    function sortGenerationMoves(moves) {        
         let m = [];
         for (let i = 0; i < moves.length; i++) {            
             for (let j = 0; j < moves[i].version_group_details.length; j++) {
@@ -223,10 +214,7 @@ function PokemonPage({Pokedex}) {
             const typeNames = data.types.map((t) => t.type.name);
             const { weaknesses, resistances, immunities } = await fetchTypeAdvantages(typeNames);
 
-            let moves = data.moves.map((m) => [m.move.name,
-            learnedBy(m)]);
-            //console.log(moves);
-            moves = sortMoves(moves);
+            let moves = sortGenerationMoves(data.moves)               
 
             let encounters;
             await Pokedex.resource([
@@ -416,32 +404,6 @@ function LocationTable({encounters }) {
             </div>
         </>
     )
-}
-
-function learnedBy(move) {
-    if (move.version_group_details[0].move_learn_method.name === 'level-up') {
-        return move.version_group_details[0].level_learned_at
-    } else {
-        return capitalize(move.version_group_details[0].move_learn_method.name)
-    }
-}
-
-function sortMoves(moves) {
-    return moves.sort((a, b) => {
-        const methodA = a[1];
-        const methodB = b[1];
-
-        if (typeof methodA === "number" && typeof methodB === "number") {
-            return methodA - methodB;
-        }
-        if (typeof methodA === "number") {
-            return -1;
-        }
-        if (typeof methodB === "number") {
-            return 1
-        }
-        return String(methodA).localeCompare(String(methodB));
-    })
 }
 
 function legend(speciesData) {
