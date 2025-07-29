@@ -346,7 +346,9 @@ function PokemonPage({Pokedex}) {
                                             id="generation-dropdown"                                           
                                             className="p-1 px-2 border-0"
                                         >
-                                            {generation}
+                                            {Object.entries(generations).find(
+                                                ([_, value]) => value === generation
+                                            )?.[0]}
                                         </Dropdown.Toggle>
 
                                         <Dropdown.Menu className="py-0">
