@@ -336,27 +336,39 @@ function PokemonPage({Pokedex}) {
                             </div>
                         </div>
                     </div>
-                    <Dropdown className="my-3">
-                        <Dropdown.Toggle id="generation-dropdown">
-                            {generation}
-                        </Dropdown.Toggle>
+                    <div className="row py-0">
+                        <div className="d-flex py-0">
+                            <div class="ms-auto py-0">
+                                <div className="d-flex align-items-center py-0">
+                                    <strong className="me-2 py-0">Select Generation:</strong>
+                                    <Dropdown className="my-3 py-0" >
+                                        <Dropdown.Toggle
+                                            id="generation-dropdown"                                           
+                                            className="p-1 px-2 border-0"
+                                        >
+                                            {generation}
+                                        </Dropdown.Toggle>
 
-                        <Dropdown.Menu>
-                            {Object.entries(generations).map(([genNumber, versionString]) => {
-                                const label = `Gen ${genNumber}`;
-                                return (
-                                    <Dropdown.Item
-                                        key={genNumber}
-                                        onClick={() => handleSelect(versionString, label)}
-                                    >
-                                        {label}
-                                    </Dropdown.Item>
-                                );
-                            })}
-                        </Dropdown.Menu>
-                    </Dropdown>                 
-                    <div className="row" >
-                        <div className="col-md-6" >
+                                        <Dropdown.Menu className="py-0">
+                                            {Object.entries(generations).map(([genNumber, versionString]) => {
+                                                const label = `Gen ${genNumber}`;
+                                                return (
+                                                    <Dropdown.Item
+                                                        key={genNumber}
+                                                        onClick={() => handleSelect(versionString, label)}
+                                                    >
+                                                        {label}
+                                                    </Dropdown.Item>
+                                                );
+                                            })}
+                                        </Dropdown.Menu>
+                                    </Dropdown>                 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row py-0" >
+                        <div >
                             <strong>Moves:</strong>
                             {pokemon ? (
                                 <ScrollableMovesTable moves={moves} />
