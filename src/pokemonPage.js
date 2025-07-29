@@ -155,10 +155,10 @@ function PokemonPage({Pokedex}) {
                     } else {
                         moveData.push(moves[i].version_group_details[j].level_learned_at);
                     }
-                    moveData.push(moves[i].version_group_details[j].version_group.name);
+                    moveData.push(moves[i].version_group_details[j].version_group.name);                    
 
                     m.push(moveData);
-
+                    continue;
                 }             
             }
         }
