@@ -21,8 +21,7 @@ export function DisplayPokemon({ name, Pokedex }) {
         const fetchPokemonData = async () => {
             try {
                 const data = await Pokedex.getPokemonByName(name);
-                //const speciesData = await Pokedex.getPokemonSpeciesByName(name);
-                console.log(data);
+                //const speciesData = await Pokedex.getPokemonSpeciesByName(name);                
 
                 const imageUrl = data.sprites.other["official-artwork"].front_default || data.sprites.front_default;
 

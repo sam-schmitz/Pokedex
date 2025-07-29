@@ -24,9 +24,6 @@ function PokemonPage({Pokedex}) {
     const [pokemon, setPokemon] = useState(null);   //state to store Pokemon data
     const [species, setSpecies] = useState(null);   //contains more pokemon data    
     const [moves, setMoves] = useState([]);
-    const [weakneses, setWeaknesses] = useState([]);
-    const [resistances, setResistances] = useState([]);
-    const [immunites, setImmunities] = useState([]);
     const [legendary, setLegendary] = useState(null);
     const [flavorText, setFlavorText] = useState(null);
     const [variety, setVariety] = useState(0);
@@ -36,16 +33,11 @@ function PokemonPage({Pokedex}) {
         const fetchPokemonData = async () => {
             try {
                 //reset state before fetching new data
-                setPokemon(null);                
-                setMoves([]);
-                setWeaknesses([]);
-                setResistances([]);
-                setImmunities([]);
+                setPokemon(null);                                                                              
                 setLegendary(null);
                 setVariety(0);
 
-                const data = await Pokedex.getPokemonByName(id);
-                console.log(data);
+                const data = await Pokedex.getPokemonByName(id);                
                 
                 let speciesData;                
                 try {
@@ -57,9 +49,7 @@ function PokemonPage({Pokedex}) {
                     } else {
                         console.error("Error fetching species: ", error);
                     }
-                }
-
-                console.log(speciesData);
+                }                
 
                 //Get Pokemon Image URL
                 const imageUrl = data.sprites.other["official-artwork"].front_default || data.sprites.front_default;
@@ -72,8 +62,7 @@ function PokemonPage({Pokedex}) {
                 const englishFlavorText = extractFlavorText(speciesData.flavor_text_entries);
                 //console.log(evolutionString);
 
-                //extract move names
-                console.log(data.moves);
+                //extract move names                
                 let movesByGen = sortGenerationMoves(data.moves)               
 
                 const typeNames = data.types.map((t) => t.type.name);                
@@ -96,8 +85,7 @@ function PokemonPage({Pokedex}) {
 
                 //update state with the fetched data                
                 setPokemon({ ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, movesByGen, encounters });
-                setSpecies(speciesData);                
-                setMoves(movesByGen);
+                setSpecies(speciesData);                                
                 setLegendary(legendarity);
                 setFlavorText(englishFlavorText);
             } catch (error) {
@@ -143,8 +131,7 @@ function PokemonPage({Pokedex}) {
 
         return result;
     }
-    function sortGenerationMoves(moves) {        
-        console.log(moves, generation)
+    function sortGenerationMoves(moves) {                
         let m = [];
         for (let i = 0; i < moves.length; i++) {            
             for (let j = 0; j < moves[i].version_group_details.length; j++) {
@@ -197,11 +184,6 @@ function PokemonPage({Pokedex}) {
             //remove resistances from weaknesses (if both exist it's neutral damage)
             weakSet = new Set([...weakSet].filter(t => !resistSet.has(t)));            
 
-            console.log({
-                weaknesses: [...weakSet],
-                resistances: [...resistSet],
-                immunities: [...immuneSet]
-            });
             return {
                 weaknesses: [...weakSet],
                 resistances: [...resistSet],
@@ -338,7 +320,7 @@ function PokemonPage({Pokedex}) {
                     </div>
                     <div className="row py-0">
                         <div className="d-flex py-0">
-                            <div class="ms-auto py-0">
+                            <div className="ms-auto py-0">
                                 <div className="d-flex align-items-center py-0">
                                     <strong className="me-2 py-0">Select Generation:</strong>
                                     <Dropdown className="my-3 py-0" >
@@ -373,7 +355,7 @@ function PokemonPage({Pokedex}) {
                         <div >
                             <strong>Moves:</strong>
                             {pokemon ? (
-                                <ScrollableMovesTable moves={moves} />
+                                <ScrollableMovesTable moves={pokemon.movesByGen} />
                             ) : (
                                 <p>Loading moves...</p>
                             )}
