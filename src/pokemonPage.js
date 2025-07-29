@@ -5,6 +5,7 @@ import { Pokedex } from 'pokeapi-js-wrapper';
 import React, {useState, useEffect} from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { GoHomeButton, DisplayPokemon, capitalize, removeHyphen, normalizeToPokeAPIName } from "./widgets.js";
+import { Dropdown } from 'react-bootstrap';
 
 
 const generations = {
@@ -73,7 +74,7 @@ function PokemonPage({Pokedex}) {
 
                 //extract move names
                 console.log(data.moves);
-                let moves = sortGenerationMoves(data.moves)               
+                let movesByGen = sortGenerationMoves(data.moves)               
 
                 const typeNames = data.types.map((t) => t.type.name);                
                 const { weaknesses, resistances, immunities } = await fetchTypeAdvantages(typeNames);                
@@ -91,12 +92,12 @@ function PokemonPage({Pokedex}) {
                 const variety = speciesData.varieties.find(
                     (v) => v.pokemon.name === id
                 );
-                variety.pokemon = { ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, moves, encounters };
+                variety.pokemon = { ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, movesByGen, encounters };
 
                 //update state with the fetched data                
-                setPokemon({ ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, moves, encounters });
+                setPokemon({ ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, movesByGen, encounters });
                 setSpecies(speciesData);                
-                setMoves(moves);
+                setMoves(movesByGen);
                 setLegendary(legendarity);
                 setFlavorText(englishFlavorText);
             } catch (error) {
@@ -143,6 +144,7 @@ function PokemonPage({Pokedex}) {
         return result;
     }
     function sortGenerationMoves(moves) {        
+        console.log(moves, generation)
         let m = [];
         for (let i = 0; i < moves.length; i++) {            
             for (let j = 0; j < moves[i].version_group_details.length; j++) {
@@ -227,7 +229,7 @@ function PokemonPage({Pokedex}) {
             const typeNames = data.types.map((t) => t.type.name);
             const { weaknesses, resistances, immunities } = await fetchTypeAdvantages(typeNames);
 
-            let moves = sortGenerationMoves(data.moves)               
+            let movesByGen = sortGenerationMoves(data.moves)               
 
             /*let encounters;
             await Pokedex.resource([
@@ -237,15 +239,21 @@ function PokemonPage({Pokedex}) {
             })*/
             let encounters = []
             
-            setPokemon({ ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, moves, encounters });               
+            setPokemon({ ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, movesByGen, encounters });               
 
             // Update Species
             const updatedSpecies = { ...species };
             //updatedSpecies.varieties = [...species.varieties];
-            updatedSpecies.varieties[index].pokemon = { ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, moves, encounters };
+            updatedSpecies.varieties[index].pokemon = { ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, movesByGen, encounters };
             setSpecies(updatedSpecies);
         }
 
+    }
+
+    const handleSelect = (value, label) => {
+        console.log(value, label)
+        setGeneration(value);
+        setMoves(sortGenerationMoves(pokemon.moves))
     }
 
 	return (
@@ -328,11 +336,30 @@ function PokemonPage({Pokedex}) {
                             </div>
                         </div>
                     </div>
+                    <Dropdown className="my-3">
+                        <Dropdown.Toggle id="generation-dropdown">
+                            {generation}
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            {Object.entries(generations).map(([genNumber, versionString]) => {
+                                const label = `Gen ${genNumber}`;
+                                return (
+                                    <Dropdown.Item
+                                        key={genNumber}
+                                        onClick={() => handleSelect(versionString, label)}
+                                    >
+                                        {label}
+                                    </Dropdown.Item>
+                                );
+                            })}
+                        </Dropdown.Menu>
+                    </Dropdown>                 
                     <div className="row" >
                         <div className="col-md-6" >
                             <strong>Moves:</strong>
                             {pokemon ? (
-                                <ScrollableMovesTable moves={pokemon.moves} />
+                                <ScrollableMovesTable moves={moves} />
                             ) : (
                                 <p>Loading moves...</p>
                             )}

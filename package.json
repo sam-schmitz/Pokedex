@@ -4,11 +4,12 @@
   "homepage": "https://sam-schmitz.github.io/Pokedex",
   "private": true,
   "dependencies": {
-    "bootstrap": "^5.3.3",
+    "bootstrap": "^5.3.7",
     "cra-template": "1.2.0",
     "fuse.js": "^7.0.0",
     "pokeapi-js-wrapper": "^1.2.7",
     "react": "^19.0.0",
+    "react-bootstrap": "^2.10.10",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.1",
     "react-scripts": "5.0.1",
