@@ -131,7 +131,8 @@ function PokemonPage({Pokedex}) {
 
         return result;
     }
-    function sortGenerationMoves(moves) {                
+    function sortGenerationMoves(moves) {   
+        
         let m = [];
         for (let i = 0; i < moves.length; i++) {            
             for (let j = 0; j < moves[i].version_group_details.length; j++) {
@@ -232,11 +233,18 @@ function PokemonPage({Pokedex}) {
 
     }
 
-    const handleSelect = (value, label) => {
-        console.log(value, label)
-        setGeneration(value);
-        setMoves(sortGenerationMoves(pokemon.moves))
+    const handleSelect = (value, label) => {        
+        setGeneration(value);          
     }
+
+    useEffect(() => {
+        if (generation !== null && pokemon !== null) {            
+            let moves = sortGenerationMoves(pokemon.moves);
+            const updatedPokemon = { ...pokemon };
+            updatedPokemon.movesByGen = moves;
+            setPokemon(updatedPokemon);
+        }
+    }, [generation]);
 
 	return (
         <>
