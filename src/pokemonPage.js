@@ -140,26 +140,35 @@ function PokemonPage({Pokedex}) {
         return result;
     }
     function sortGenerationMoves(moves) {   
+        // Finds the moves the pokemon can learn in a generation of games
         
-        let m = [];
-        for (let i = 0; i < moves.length; i++) {            
-            for (let j = 0; j < moves[i].version_group_details.length; j++) {
-                if (generation.includes(moves[i].version_group_details[j].version_group.name)) {
+        let m = []; // Array to contain the filtered moves
+        for (let i = 0; i < moves.length; i++) {          // i -> a move 
+            
+            for (let j = 0; j < moves[i].version_group_details.length; j++) {   // j -> the version details within a move
+
+                if (generation.includes(moves[i].version_group_details[j].version_group.name)) {    // if the version is in the generation
+
+                    // build an array to store the data we want about the move
                     let moveData = [moves[i].move.name];
+
+                    // Find the method in which the pokemon learns the move
                     if (moves[i].version_group_details[j].move_learn_method.name !== "level-up") {
                         moveData.push(capitalize(moves[i].version_group_details[j].move_learn_method.name));
                     } else {
                         moveData.push(moves[i].version_group_details[j].level_learned_at);
                     }
+
                     moveData.push(moves[i].version_group_details[j].version_group.name);                    
 
-                    m.push(moveData);
-                    continue;
+                    m.push(moveData);   
+
+                    continue;   //there are multiple games in a generation, we don't want to count the moves twice
                 }             
             }
         }
         
-        return m.sort((a, b) => {
+        return m.sort((a, b) => {   // sorts the moves in the order (level up moves, other methods)
             const methodA = a[1];
             const methodB = b[1];
 
