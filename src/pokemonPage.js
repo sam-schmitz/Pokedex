@@ -1,7 +1,6 @@
 // pokemonPage.js
 // By: Sam Schmitz
 
-import { Pokedex } from 'pokeapi-js-wrapper';
 import React, {useState, useEffect} from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { GoHomeButton, DisplayPokemon, capitalize, removeHyphen, normalizeToPokeAPIName } from "./widgets.js";
@@ -316,14 +315,10 @@ function PokemonPage({Pokedex}) {
                 <div className="container mt-3">
                     <div className="row">
                         <div className="col-sm-6 col-md-4 justify-content-center">
-                            {pokemon ? (
-                                <>
-                                    <img src={pokemon.imageUrl} alt={pokemon.name} width="200" />
-                                    <p><strong>Description:</strong> {removeArrow(flavorText)}</p>
-                                </>
-                            ) : (
-                                    <p>Loading Image...</p>
-                            )}
+                            <PokemonImage
+                                pokemon={pokemon}
+                                flavorText={flavorText }
+                            />                           
                         </div>
                         <div className="col-sm-6 col-md-4 justify-content-center">
                             <PokemonStats
@@ -386,6 +381,23 @@ function PokemonPage({Pokedex}) {
 		    </div>
 		</>
 	)
+}
+
+function PokemonImage({ pokemon, flavorText }) {
+    // Displays an image of the Pokemon and some flavor text
+
+    return (
+        <>
+            {pokemon ? (
+                <>
+                    <img src={pokemon.imageUrl} alt={pokemon.name} width="200" />
+                    <p><strong>Description:</strong> {removeArrow(flavorText)}</p>
+                </>
+            ) : (
+                <p>Loading Image...</p>
+            )}
+        </>
+    )
 }
 function PokemonStats({ pokemon }) {
     // Displays the stats of the pokemon
