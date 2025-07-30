@@ -22,28 +22,29 @@ const generations = {
 function PokemonPage({Pokedex}) {
     const { id } = useParams();
     const [pokemon, setPokemon] = useState(null);   //state to store Pokemon data
-    const [species, setSpecies] = useState(null);   //contains more pokemon data    
-    const [moves, setMoves] = useState([]);
+    const [species, setSpecies] = useState(null);   //contains more pokemon data        
     const [legendary, setLegendary] = useState(null);
-    const [flavorText, setFlavorText] = useState(null);
-    const [variety, setVariety] = useState(0);
+    const [flavorText, setFlavorText] = useState(null);    
     const [generation, setGeneration] = useState('scarlet-violet')
 
 	useEffect(() => {
         const fetchPokemonData = async () => {
             try {
-                //reset state before fetching new data
+                // reset state before fetching new data
                 setPokemon(null);                                                                              
-                setLegendary(null);
-                setVariety(0);
+                setLegendary(null);                
 
+                // Fetch pokemon data from the api
                 const data = await Pokedex.getPokemonByName(id);                
-                
+
+                // fetch species data (whole pokemon's family including evolutions)
                 let speciesData;                
                 try {
                     speciesData = await Pokedex.getPokemonSpeciesByName(id);
                 } catch (error) {
                     if (error?.response.status === 404) {                        
+                        // handle error caused when a variant's species data is looked for
+                        // instead find the base pokemon's species
                         const { base, suffix } = splitFormSuffix(id);
                         speciesData = await Pokedex.getPokemonSpeciesByName(base);
                     } else {
@@ -59,15 +60,17 @@ function PokemonPage({Pokedex}) {
 
                 //extract data from species
                 const legendarity = legend(speciesData);
-                const englishFlavorText = extractFlavorText(speciesData.flavor_text_entries);
-                //console.log(evolutionString);
+                const englishFlavorText = extractFlavorText(speciesData.flavor_text_entries);                
 
                 //extract move names                
                 let movesByGen = sortGenerationMoves(data.moves)               
 
+                // use the pokemon's type to find it's advantages and weaknesses
                 const typeNames = data.types.map((t) => t.type.name);                
                 const { weaknesses, resistances, immunities } = await fetchTypeAdvantages(typeNames);                
 
+                // find the locations a pokemon could be encountered in
+                //currently unused
                 let encounters = [];
                 /*await Pokedex.resource([
                     data.location_area_encounters
@@ -94,7 +97,7 @@ function PokemonPage({Pokedex}) {
         };
 
     fetchPokemonData();
-    }, [id, Pokedex]);
+    }, [id]);
     async function generateEvolutionString(speciesData, currentFormName) {
         function formSuffix(formName) {
             const match = formName.match(/-(alola|galar|hisui|paldea)/i);
