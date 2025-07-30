@@ -187,19 +187,23 @@ function PokemonPage({Pokedex}) {
 
     const fetchTypeAdvantages = async (typeNames) => {
         try {
+            // typeNames = the names of the types of the pokemon
+
             let weakSet = new Set();
             let resistSet = new Set();
             let immuneSet = new Set();
 
             for (const type of typeNames) {
+                // pull data about the type from the api
                 const typeData = await Pokedex.getTypeByName(type);
 
+                // add the weaknesses, resistances, and immunities to their propper sets
                 typeData.damage_relations.double_damage_from.forEach(t => weakSet.add(t.name));
                 typeData.damage_relations.half_damage_from.forEach(t => resistSet.add(t.name));
                 typeData.damage_relations.no_damage_from.forEach(t => immuneSet.add(t.name));
             }
 
-            //remove resistances from weaknesses (if both exist it's neutral damage)
+            // remove resistances from weaknesses (if both exist it's neutral damage)
             weakSet = new Set([...weakSet].filter(t => !resistSet.has(t)));            
 
             return {
@@ -213,50 +217,66 @@ function PokemonPage({Pokedex}) {
     };    
 
     const handleClick = async (index) => {
+        // handles clicks on a pokemon's variations
+
         if (species.varieties[index].pokemon.abilities) {
+
             // variety already has data stored
-            setPokemon(species.varieties[index].pokemon);            
+            setPokemon(species.varieties[index].pokemon);           
+            
         } else {
+
             setPokemon(null);
             const id = species.varieties[index].pokemon.name;
             const data = await Pokedex.getPokemonByName(id);
 
             const imageUrl = data.sprites.other["official-artwork"].front_default || data.sprites.front_default;
 
-            // Update evolutions                        
+            // Generate new evolution string
             const evolutionArray = await generateEvolutionString(species, data.name);   
 
+            // Find new type matchups
             const typeNames = data.types.map((t) => t.type.name);
             const { weaknesses, resistances, immunities } = await fetchTypeAdvantages(typeNames);
 
+            // Find the correct moves by generation
             let movesByGen = sortGenerationMoves(data.moves)               
 
+            // currently unused encounter locations data
+            let encounters = []
             /*let encounters;
             await Pokedex.resource([
                 data.location_area_encounters
             ]).then(function (response) {
                 encounters = response
             })*/
-            let encounters = []
-            
+
+            // Update the pokemon state
             setPokemon({ ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, movesByGen, encounters });               
 
-            // Update Species
-            const updatedSpecies = { ...species };
-            //updatedSpecies.varieties = [...species.varieties];
+            // Update Species using a copy of species
+            const updatedSpecies = { ...species };            
             updatedSpecies.varieties[index].pokemon = { ...data, imageUrl, evolutionArray, weaknesses, resistances, immunities, movesByGen, encounters };
+
+            // use the updated species to update the species state
             setSpecies(updatedSpecies);
         }
 
     }
 
-    const handleSelect = (value, label) => {        
+    const handleSelect = (value, label) => {     
+        // Handles the selection made in the select generations drop down
         setGeneration(value);          
     }
 
     useEffect(() => {
+        // activates when the generation is updated
         if (generation !== null && pokemon !== null) {            
+            // ensure that pokemon has been found before trying to update using that data
+
             let moves = sortGenerationMoves(pokemon.moves);
+
+            // Create and use a copy to update the pokemon state
             const updatedPokemon = { ...pokemon };
             updatedPokemon.movesByGen = moves;
             setPokemon(updatedPokemon);
