@@ -415,6 +415,8 @@ function PokemonPage({Pokedex}) {
 }
 
 function ScrollableMovesTable({ moves }) {
+    // scrollable table that displays data about each move
+
     return (
         <>
             <div style={{ maxHeight: "300px", overflowY: "auto", border: "1px solid #ccc", padding: "10px" }}>
@@ -446,7 +448,10 @@ function ScrollableMovesTable({ moves }) {
         </>
         )
 }
-function LocationTable({encounters }) {
+function LocationTable({ encounters }) {
+    // currently not implemented
+    // Displays data about each location a pokemon could spawn in
+
     return (
         <>
             <div style={{ maxHeight: "300px", overflowY: "auto", border: "1px solid #ccc", padding: "10px" }}>
@@ -481,6 +486,8 @@ function LocationTable({encounters }) {
 }
 
 function legend(speciesData) {
+    // Finds if a pokemon is legendary or mythical
+
     if (speciesData.is_legendary === true) {
         return "Legendary";
     } else if (speciesData.is_mythical === true) {
@@ -491,6 +498,8 @@ function legend(speciesData) {
 }
 
 function extractFlavorText(entries) {    
+    // pulls the engilsh flavor text
+
     for (let entry of entries) {        
         if (entry.language.name === 'en') {
             return entry.flavor_text;
@@ -503,6 +512,7 @@ function removeArrow(text) {
     return text.replace(/\f/g, " ");
 }
 function splitFormSuffix(name) {
+    // seperates a pokemon's name from it's variant suffix
     const match = name.match(/^(.*?)(-(alola|galar|hisui|paldea|mega|gigantamax))$/i);
     if (match) {
         return {
