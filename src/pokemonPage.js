@@ -349,18 +349,10 @@ function PokemonPage({Pokedex}) {
                             )}
                         </div>
                         <div className="col-md-4">
-                            <strong>Evolution Chain: </strong>
-                            <div className="row row-cols-3 g-3 justify-content-center">
-                                {pokemon ? (
-                                    pokemon.evolutionArray.map((name, index) => (
-                                        <div className="col text-center" key={name} >
-                                            <DisplayPokemon name={name} Pokedex={Pokedex} />
-                                        </div>
-                                    ))
-                                ) : (
-                                    <p>Loading...</p>
-                                )}
-                            </div>
+                            <EvolutionCards
+                                pokemon={pokemon}
+                                Pokedex={Pokedex }
+                            />                            
                         </div>
                     </div>
                     <div className="row py-0">
@@ -412,6 +404,24 @@ function PokemonPage({Pokedex}) {
 		    </div>
 		</>
 	)
+}
+function EvolutionCards({pokemon, Pokedex }) {
+    return (
+        <>
+            <strong>Evolution Chain: </strong>
+            <div className="row row-cols-3 g-3 justify-content-center">
+                {pokemon ? (
+                    pokemon.evolutionArray.map((name, index) => (
+                        <div className="col text-center" key={name} >
+                            <DisplayPokemon name={name} Pokedex={Pokedex} />
+                        </div>
+                    ))
+                ) : (
+                    <p>Loading...</p>
+                )}
+            </div>
+        </>
+    )
 }
 
 function ScrollableMovesTable({ moves }) {
