@@ -7,8 +7,8 @@ import { useParams, Link } from 'react-router-dom';
 import { GoHomeButton, DisplayPokemon, capitalize, removeHyphen, normalizeToPokeAPIName } from "./widgets.js";
 import { Dropdown } from 'react-bootstrap';
 
-
-const generations = {
+// Hard codes the generation's number to a string containing the games in it
+const generations = {   
     1: 'red-blue-yellow',
     2: 'gold-silver-crystal',
     3: 'ruby-sapphire-emerald-firered-leafgreen',
@@ -20,7 +20,7 @@ const generations = {
     9: 'scarlet-violet'
 };
 function PokemonPage({Pokedex}) {
-    const { id } = useParams();
+    const { id } = useParams(); // The name of the pokemon (retrieved from the url)
     const [pokemon, setPokemon] = useState(null);   //state to store Pokemon data
     const [species, setSpecies] = useState(null);   //contains more pokemon data        
     const [legendary, setLegendary] = useState(null);
@@ -99,12 +99,15 @@ function PokemonPage({Pokedex}) {
     fetchPokemonData();
     }, [id]);
     async function generateEvolutionString(speciesData, currentFormName) {
+        // Creates an array contiaining a pokemon's evolutionary line
         function formSuffix(formName) {
+            // Returns the region of the regional variant if there is one
             const match = formName.match(/-(alola|galar|hisui|paldea)/i);
             return match ? match[1].toLowerCase() : null;
         }
 
         function collectSpeciesNames(chain, names = []) {
+            // Creates an array of the names of each pokemon from the evolution chain retrieved from the api
             names.push(chain.species.name);
             for (const evo of chain.evolves_to) {
                 collectSpeciesNames(evo, names);
@@ -114,10 +117,12 @@ function PokemonPage({Pokedex}) {
 
         const suffix = formSuffix(currentFormName);
 
+        // Finds the evolution chain of the pokemon and converts it to an array
         const evolutionChainId = speciesData.evolution_chain.url.split("/").slice(-2, -1)[0];
         const evolutionData = await Pokedex.getEvolutionChainById(evolutionChainId);
         const speciesNames = collectSpeciesNames(evolutionData.chain);
 
+        // Finds all of the evolutions of a pokemon based on it's regional variant (if one exists)
         const result = [];
 
         for (const speciesName of speciesNames) {
