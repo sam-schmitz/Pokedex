@@ -263,11 +263,6 @@ function PokemonPage({Pokedex}) {
 
     }
 
-    const handleSelect = (value, label) => {     
-        // Handles the selection made in the select generations drop down
-        setGeneration(value);          
-    }
-
     useEffect(() => {
         // activates when the generation is updated
         if (generation !== null && pokemon !== null) {            
@@ -333,37 +328,11 @@ function PokemonPage({Pokedex}) {
                         </div>
                     </div>
                     <div className="row py-0">
-                        <div className="d-flex py-0">
-                            <div className="ms-auto py-0">
-                                <div className="d-flex align-items-center py-0">
-                                    <strong className="me-2 py-0">Select Generation:</strong>
-                                    <Dropdown className="my-3 py-0" >
-                                        <Dropdown.Toggle
-                                            id="generation-dropdown"                                           
-                                            className="p-1 px-2 border-0"
-                                        >
-                                            {Object.entries(generations).find(
-                                                ([_, value]) => value === generation
-                                            )?.[0]}
-                                        </Dropdown.Toggle>
-
-                                        <Dropdown.Menu className="py-0">
-                                            {Object.entries(generations).map(([genNumber, versionString]) => {
-                                                const label = `Gen ${genNumber}`;
-                                                return (
-                                                    <Dropdown.Item
-                                                        key={genNumber}
-                                                        onClick={() => handleSelect(versionString, label)}
-                                                    >
-                                                        {label}
-                                                    </Dropdown.Item>
-                                                );
-                                            })}
-                                        </Dropdown.Menu>
-                                    </Dropdown>                 
-                                </div>
-                            </div>
-                        </div>
+                        <GenerationSelector
+                            generation={generation}
+                            setGeneration={setGeneration }
+                        />
+                        
                     </div>
                     <div className="row py-0" >
                         <div >
@@ -443,6 +412,50 @@ function EvolutionCards({ pokemon, Pokedex }) {
                 ) : (
                     <p>Loading...</p>
                 )}
+            </div>
+        </>
+    )
+}
+function GenerationSelector({ generation, setGeneration}) {
+    // Allows the user to change the generation being displayed
+
+    const handleSelect = (value, label) => {
+        // Handles the selection made in the select generations drop down
+        setGeneration(value);
+    }
+
+    return (
+        <>
+            <div className="d-flex py-0">
+                <div className="ms-auto py-0">
+                    <div className="d-flex align-items-center py-0">
+                        <strong className="me-2 py-0">Select Generation:</strong>
+                        <Dropdown className="my-3 py-0" >
+                            <Dropdown.Toggle
+                                id="generation-dropdown"
+                                className="p-1 px-2 border-0"
+                            >
+                                {Object.entries(generations).find(
+                                    ([_, value]) => value === generation
+                                )?.[0]}
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu className="py-0">
+                                {Object.entries(generations).map(([genNumber, versionString]) => {
+                                    const label = `Gen ${genNumber}`;
+                                    return (
+                                        <Dropdown.Item
+                                            key={genNumber}
+                                            onClick={() => handleSelect(versionString, label)}
+                                        >
+                                            {label}
+                                        </Dropdown.Item>
+                                    );
+                                })}
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </div>
+                </div>
             </div>
         </>
     )
