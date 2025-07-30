@@ -326,27 +326,9 @@ function PokemonPage({Pokedex}) {
                             )}
                         </div>
                         <div className="col-sm-6 col-md-4 justify-content-center">
-                            {pokemon ? (
-                                <>                                
-                                    <p>
-                                        <strong>Pokedex Number:</strong> {pokemon.id} <br />                                        
-                                        <strong>Type(s):</strong> {pokemon.types.map((t) => capitalize(t.type.name)).join(", ")} <br />
-                                        <strong>Weaknesses:</strong> {pokemon.weaknesses.map((t) => capitalize(t)).join(", ")} <br />
-                                        <strong>Resistances:</strong> {pokemon.resistances.map((t) => capitalize(t)).join(", ")} <br />
-                                        {pokemon.immunities.length > 0 && (
-                                            <><strong>Immunities:</strong> {pokemon.immunities.map((t) => capitalize(t)).join(", ")} <br /></>
-                                        )}                                        
-                                        
-                                        
-                                        <strong>Base Stats: </strong><br />
-                                        <strong>HP:</strong> {pokemon.stats[0].base_stat} <strong>Attack: </strong>{pokemon.stats[1].base_stat} <br />
-                                        <strong>Defense:</strong> {pokemon.stats[2].base_stat} <strong>Special Attack: </strong>{pokemon.stats[3].base_stat} <br />
-                                        <strong>Special Defense:</strong> {pokemon.stats[4].base_stat} <strong>Speed: </strong>{pokemon.stats[5].base_stat}
-                                    </p>
-                                </>
-                            ) : (
-                                <p>Loading...</p>   //displayed while data is being fetched
-                            )}
+                            <PokemonStats
+                                pokemon={pokemon }
+                            />                            
                         </div>
                         <div className="col-md-4">
                             <EvolutionCards
@@ -405,7 +387,37 @@ function PokemonPage({Pokedex}) {
 		</>
 	)
 }
-function EvolutionCards({pokemon, Pokedex }) {
+function PokemonStats({ pokemon }) {
+    // Displays the stats of the pokemon
+
+    return (
+        <>
+            {pokemon ? (
+                <>
+                    <p>
+                        <strong>Pokedex Number:</strong> {pokemon.id} <br />
+                        <strong>Type(s):</strong> {pokemon.types.map((t) => capitalize(t.type.name)).join(", ")} <br />
+                        <strong>Weaknesses:</strong> {pokemon.weaknesses.map((t) => capitalize(t)).join(", ")} <br />
+                        <strong>Resistances:</strong> {pokemon.resistances.map((t) => capitalize(t)).join(", ")} <br />
+                        {pokemon.immunities.length > 0 && (
+                            <><strong>Immunities:</strong> {pokemon.immunities.map((t) => capitalize(t)).join(", ")} <br /></>
+                        )}
+
+
+                        <strong>Base Stats: </strong><br />
+                        <strong>HP:</strong> {pokemon.stats[0].base_stat} <strong>Attack: </strong>{pokemon.stats[1].base_stat} <br />
+                        <strong>Defense:</strong> {pokemon.stats[2].base_stat} <strong>Special Attack: </strong>{pokemon.stats[3].base_stat} <br />
+                        <strong>Special Defense:</strong> {pokemon.stats[4].base_stat} <strong>Speed: </strong>{pokemon.stats[5].base_stat}
+                    </p>
+                </>
+            ) : (
+                <p>Loading...</p>   //displayed while data is being fetched
+            )}
+        </>
+    )
+}
+function EvolutionCards({ pokemon, Pokedex }) {
+    // Displays the evolutions of the pokemon
     return (
         <>
             <strong>Evolution Chain: </strong>
