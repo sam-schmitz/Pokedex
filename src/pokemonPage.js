@@ -144,9 +144,9 @@ function PokemonPage({Pokedex}) {
         let m = []; // Array to contain the filtered moves
         for (let i = 0; i < moves.length; i++) {          // i -> a move 
             
-            for (let j = 0; j < moves[i].version_group_details.length; j++) {   // j -> the version details within a move
+            for (let j = 0; j < moves[i].version_group_details.length; j++) {   // j -> the version details within a move                
 
-                if (generation.includes(moves[i].version_group_details[j].version_group.name)) {    // if the version is in the generation
+                if (generation.includes(moves[i].version_group_details[j].version_group.name)) {    // if the version is in the generation                    
 
                     // build an array to store the data we want about the move
                     let moveData = [moves[i].move.name];
@@ -161,8 +161,8 @@ function PokemonPage({Pokedex}) {
                     moveData.push(moves[i].version_group_details[j].version_group.name);                    
 
                     m.push(moveData);   
-
-                    continue;   //there are multiple games in a generation, we don't want to count the moves twice
+                    
+                    break;   //there are multiple games in a generation, we don't want to count the moves twice                    
                 }             
             }
         }
